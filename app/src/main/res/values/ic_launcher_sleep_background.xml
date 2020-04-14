@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="activity_vertical_margin">2dp</dimen>
+    <color name="ic_launcher_sleep_background">#000000</color>
 </resources>
