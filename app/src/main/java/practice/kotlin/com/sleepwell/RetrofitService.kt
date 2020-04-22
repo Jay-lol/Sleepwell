@@ -41,19 +41,19 @@ class RetrofitService {
             }
         })
     }
-    fun callBackGet(res: String): apiService {
-        val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(1, TimeUnit.MINUTES)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
-            .build()
+    fun callBackGet() : apiService {
+//        val okHttpClient = OkHttpClient.Builder()
+//            .connectTimeout(1, TimeUnit.MINUTES)
+//            .readTimeout(60, TimeUnit.SECONDS)
+//            .writeTimeout(60, TimeUnit.SECONDS)
+//            .build()
         var retrofit = Retrofit.Builder()
             .baseUrl("https://www.nodap.xyz/user/")
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
             .build()
             .create(apiService::class.java)
+
         return retrofit
     }
 

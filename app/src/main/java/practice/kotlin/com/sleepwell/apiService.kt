@@ -23,7 +23,5 @@ interface apiService {
     @GET("/user")
     fun getTotalUser(): Observable<JsonObject>
 
-    @GET
-    @Streaming
-    fun getImageDetails(@Url url : String) : Call<ResponseBody>
+
 }

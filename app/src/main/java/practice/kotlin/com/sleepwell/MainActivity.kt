@@ -1,16 +1,14 @@
 package practice.kotlin.com.sleepwell
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.custom_tab1.view.*
+import org.jetbrains.anko.startActivity
 import practice.kotlin.com.sleepwell.fragment.AlarmFrag
 import practice.kotlin.com.sleepwell.fragment.CommuFrag
 import practice.kotlin.com.sleepwell.fragment.SleepFrag
@@ -27,9 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         mContext = applicationContext
 
-
-        val intent = Intent(this, LoadingActivity::class.java)
-        startActivity(intent)
+        startActivity<LoadingActivity>()
 
         // 모든 버튼 클릭관리
 

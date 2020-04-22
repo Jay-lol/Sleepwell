@@ -4,22 +4,16 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TimePicker
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_alarm.*
 import kotlinx.android.synthetic.main.fragment_alarm.view.*
-import kotlinx.android.synthetic.main.fragment_commu.view.*
 import practice.kotlin.com.sleepwell.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -65,7 +59,7 @@ class AlarmFrag : Fragment() {
             view.timePicker.currentMinute = pre_minute
         }
 
-        view.button.setOnClickListener(View.OnClickListener {
+        view.alramButton.setOnClickListener(View.OnClickListener {
             val hour: Int
             val hour_24: Int
             val minute: Int

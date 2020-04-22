@@ -3,14 +3,18 @@ package practice.kotlin.com.sleepwell.fragment
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_sleep.*
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_sleep.view.*
+import org.jetbrains.anko.browse
+import org.jetbrains.anko.startActivity
 import practice.kotlin.com.sleepwell.ClickEvents
+import practice.kotlin.com.sleepwell.MainActivity
 import practice.kotlin.com.sleepwell.R
 
 /**
@@ -31,11 +35,13 @@ class SleepFrag : Fragment(), View.OnClickListener {
         view.cal_future.setOnClickListener(this)
         view.cal_past.setOnClickListener(this)
 
+
         return view
     }
 
     override fun onClick(v: View) {
         // 메인 클릭이벤트 처리
-        ClickEvents().cal(v, requireActivity())
+        activity?.browse("https://youtu.be/mtb78gxUU3E")
+//       ClickEvents().cal(v, requireActivity())
     }
 }
