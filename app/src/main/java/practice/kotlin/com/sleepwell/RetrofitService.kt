@@ -14,14 +14,13 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitService {
     fun callBackPost(res: String) {
-        val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(1, TimeUnit.MINUTES)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
-            .build()
+//        val okHttpClient = OkHttpClient.Builder()
+//            .connectTimeout(1, TimeUnit.MINUTES)
+//            .readTimeout(60, TimeUnit.SECONDS)
+//            .writeTimeout(60, TimeUnit.SECONDS)
+//            .build()
         val retrofit = Retrofit.Builder()
             .baseUrl("https://www.nodap.xyz/user/")
-            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val server = retrofit.create(apiService::class.java)

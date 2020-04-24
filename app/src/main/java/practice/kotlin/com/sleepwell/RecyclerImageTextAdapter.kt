@@ -2,14 +2,18 @@ package practice.kotlin.com.sleepwell
 
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.recycler_item.view.*
+import org.jetbrains.anko.browse
 
 
 class RecyclerImageTextAdapter (val context: Context, mList : MutableList<RecyclerItem>) :
@@ -21,6 +25,7 @@ class RecyclerImageTextAdapter (val context: Context, mList : MutableList<Recycl
         var friend_Profile = view.icon
         var friend_Name = view.title
         var friend_Status = view.desc
+
     }
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
@@ -51,6 +56,11 @@ class RecyclerImageTextAdapter (val context: Context, mList : MutableList<Recycl
              .into(holder.friend_Profile)
         holder.friend_Name?.setText(mData?.get(position)?.titleStr)
         holder.friend_Status?.setText(mData?.get(position)?.descStr)
+
+        holder.itemView.setOnClickListener{
+            mData?.get(position)?.linkUri?.let { it1 -> context.browse(it1) }
+        }
+
     }
 
 

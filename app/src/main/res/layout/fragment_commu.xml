@@ -30,5 +30,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/recyclerView"
             app:layout_constraintTop_toBottomOf="@+id/submit_area" android:layout_marginBottom="80dp"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:src="@android:drawable/btn_star_big_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true" android:id="@+id/refreshButton"
+            android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView" android:layout_marginTop="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

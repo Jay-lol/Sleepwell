@@ -6,82 +6,30 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import com.google.gson.JsonObject
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_commu.*
-import kotlinx.android.synthetic.main.fragment_commu.view.*
-import kotlinx.android.synthetic.main.fragment_commu.view.submit_area
+import practice.kotlin.com.sleepwell.fragment.CommuLoading
+import practice.kotlin.com.sleepwell.statics.JsonString
+import practice.kotlin.com.sleepwell.statics.commuList
 
-class ClickEvents : Thread(){
+class ClickEvents {
     fun cal(v: View, context : Activity){
         when(v.id){
             R.id.cal_now -> calNow(v,context)
             R.id.cal_future -> calPast(v , context)
             R.id.cal_past -> calFuture(v , context)
             R.id.text_commu -> submit(v,context)
+            R.id.refreshButton -> startRefresh()
         }
     }
 
+    private fun startRefresh() {
+        ClickEvents().StartThumnailLoading(JsonString.cnt)
+    }
+
     private fun submit(v: View, context: Activity){
-//        val retrofitService = RetrofitService().callBackGet(context.submit_area.text.toString())
-//        retrofitService.getTotalUser()
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            /*.subscribe({ it ->
-//                Log.d("content", it.toString())
-//                Log.d("userIdx ", it.getAsJsonArray("data").get(0).asJsonObject.get("userIdx").asString)
-//                Log.d("name ", it.getAsJsonArray("data").get(0).asJsonObject.get("name").asString)
-//                Log.d("part ", it.getAsJsonArray("data").get(0).asJsonObject.get("part").asString)
-//                Log.d("profileUrl ", it.getAsJsonArray("data").get(0).asJsonObject.get("profileUrl").asString)
-//                Log.d("message", it.getAsJsonPrimitive("message").asString)
-//                Log.d("status", it.getAsJsonPrimitive("status").asString)*/
-//            .subscribe({
-//                Log.d("content", it.toString())
-//                Toast.makeText(context, "$it", Toast.LENGTH_LONG).show()
-//                it.getAsJsonPrimitive("message").asString
-////                val test = it.getAsJsonArray("data").get(0).asJsonObject.get("name").asString
-////                retrofitService.getUser(test)
-////                    .subscribeOn(Schedulers.io())
-////                    .observeOn(AndroidSchedulers.mainThread())
-////                    .subscribe {
-////                        Log.d("content", it.toString())
-////                        Toast.makeText(context, "$it", Toast.LENGTH_LONG).show()
-////                    }
-//            })
-//            {
-//                Log.e("Error", it.message)
-//            }
-//        RetrofitService().callBackPost(context.submit_area.text.toString())
-        val retrofitService = RetrofitService().callBackGet()
-        retrofitService.getTotalUser()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            /*.subscribe({ it ->
-                Log.d("content", it.toString())
-                Log.d("userIdx ", it.getAsJsonArray("data").get(0).asJsonObject.get("userIdx").asString)
-                Log.d("name ", it.getAsJsonArray("data").get(0).asJsonObject.get("name").asString)
-                Log.d("part ", it.getAsJsonArray("data").get(0).asJsonObject.get("part").asString)
-                Log.d("profileUrl ", it.getAsJsonArray("data").get(0).asJsonObject.get("profileUrl").asString)
-                Log.d("message", it.getAsJsonPrimitive("message").asString)
-                Log.d("status", it.getAsJsonPrimitive("status").asString)*/
-            .subscribe({
-                Log.d("content", it.toString())
-                it.getAsJsonPrimitive("message").asString
-                val test = it.getAsJsonArray("data").get(0).asJsonObject.get("name").asString
-                retrofitService.getUser(test)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        Log.d("content", it.toString())
-                        Toast.makeText(context, "$it", Toast.LENGTH_LONG).show()
-                    }
-            })
-            {
-                Log.e("Error", it.message)
-            }
+        RetrofitService().callBackPost(context.submit_area.text.toString())
     }
 
 
@@ -104,9 +52,7 @@ class ClickEvents : Thread(){
         showTime.show()
     }
 
-    fun startLoading(){
-
-        var jsonObject : JsonObject? = null
+    fun StartThumnailLoading(check : Int){
 
         val retrofitService = RetrofitService().callBackGet()
         retrofitService.getTotalUser()
@@ -115,12 +61,23 @@ class ClickEvents : Thread(){
             /*.subscribe({ it ->
                 Log.d("content", it.toString())
                 Log.d("message", it.getAsJsonPrimitive("message").asString)
-                Log.d("status", it.getAsJsonPrimitive("status").asString)*/
+                Log.d("status", it.getAsJsonPrimitive("status").asString)
+                Log.d("status", it.getAsJsonPrimitive("data").asString)}) // data는 array라 안됨 */
             .subscribe({
                 Log.d("content", it.toString())
-                jsonObject = it
-                it.getAsJsonPrimitive("message").asString
+                JsonString.jsonArray = it.getAsJsonArray("data")
+                if(check == 0) {
+                    CommuLoading().refreshList()
+                    JsonString.cnt++
+                }
+                else{
+                    commuList.mList.clear()
+                    CommuLoading().refreshList()
+                }
+
+               /* it.getAsJsonPrimitive("message").asString
                 val test = it.getAsJsonArray("data").get(0).asJsonObject.get("linkUrl").asString
+
                 JsonString.getServerString.add(it.getAsJsonArray("data").get(0)
                     .asJsonObject.get("thumbnailUrl").asString)
                 JsonString.getTitleString.add(it.getAsJsonArray("data").get(0)
@@ -132,7 +89,7 @@ class ClickEvents : Thread(){
                 JsonString.getTitleString.add(it.getAsJsonArray("data").get(1)
                     .asJsonObject.get("linkTitle").asString)
                 JsonString.getWriterString.add(it.getAsJsonArray("data").get(1)
-                    .asJsonObject.get("linkChannel").asString)
+                    .asJsonObject.get("linkChannel").asString)*/
 
             })
             {

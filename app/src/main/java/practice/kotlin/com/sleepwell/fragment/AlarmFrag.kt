@@ -41,8 +41,8 @@ class AlarmFrag : Fragment() {
         val nextDate = nextNotifyTime.time
         val date_text =
             SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(nextDate)
-        Toast.makeText(requireContext(), "[처음 실행시] 다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT)
-            .show()
+//        Toast.makeText(requireContext(), "[처음 실행시] 다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT)
+//            .show()
 
 
         // 이전 설정값으로 TimePicker 초기화

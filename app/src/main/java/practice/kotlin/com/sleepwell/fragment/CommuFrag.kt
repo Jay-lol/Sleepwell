@@ -3,6 +3,7 @@ package practice.kotlin.com.sleepwell.fragment
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_commu.*
 import kotlinx.android.synthetic.main.fragment_commu.view.*
 import practice.kotlin.com.sleepwell.*
+import practice.kotlin.com.sleepwell.statics.commuList.Companion.mList
 
 
 /**
@@ -25,7 +27,6 @@ class CommuFrag : Fragment(),View.OnClickListener {
 
     private var mAdapter: RecyclerImageTextAdapter? = null
 
-    var mList = arrayListOf<RecyclerItem>()
     lateinit var recyclerView1 : RecyclerView
 
     override fun onCreateView(
@@ -36,8 +37,7 @@ class CommuFrag : Fragment(),View.OnClickListener {
         var view = inflater.inflate(R.layout.fragment_commu, container, false)
         view.text_commu.text = name
 
-
-        if(JsonString.cnt == 0) {
+        /*if(JsonString.cnt == 0) {
             addItem(
                 JsonString.getServerString[0],
                 JsonString.getTitleString[0], JsonString.getWriterString[0]
@@ -48,12 +48,16 @@ class CommuFrag : Fragment(),View.OnClickListener {
                 JsonString.getTitleString[1], JsonString.getWriterString[1]
             )
             JsonString.cnt++
-        }
+        }*/
 
-        recyclerView1 = view.findViewById(R.id.recyclerView) as RecyclerView
-        recyclerView1.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView1.adapter = RecyclerImageTextAdapter(requireContext(), mList)
+//        if(false)
+//            // 새로고침 누르면 CommuLoading().refreshList() 호출
+        view.refreshButton.setOnClickListener(this)
 
+
+        view.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        view.recyclerView.adapter = RecyclerImageTextAdapter(requireContext(), mList)
+        view.recyclerView.adapter!!.notifyDataSetChanged()
         view.text_commu.setOnClickListener(this)
 
         return view
@@ -64,14 +68,4 @@ class CommuFrag : Fragment(),View.OnClickListener {
         ClickEvents().cal(v,requireActivity())
     }
 
-    fun addItem(icon: String, title: String, desc: String) {
-
-        var item : RecyclerItem? = RecyclerItem()
-
-        item?.iconUri = icon
-        item?.titleStr = title
-        item?.descStr = desc
-
-        mList.add(item!!)
-    }
 }
