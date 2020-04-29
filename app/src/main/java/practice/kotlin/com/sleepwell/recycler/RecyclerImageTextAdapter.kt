@@ -74,53 +74,27 @@ class RecyclerImageTextAdapter(val context: Context, mList: MutableList<Recycler
         holder.itemView.setOnClickListener {
             mData?.get(position)?.linkUri?.let { it1 -> context.browse(it1) }
         }
+
         holder.likeButton.setOnClickListener {
             if (check == 0) {
-                send(holder, position, LIKE) {
-                    if(it == 0){
-                        holder.likeNumber?.setText((mData?.get(position)?.likeNumber!!.toInt() + 1).toString())
-                    } else {
-                        context.toast("이미 투표하셨습니다!")
-                    }
-                }
+                ClickEvents()
+                    .sendLike(mData?.get(position)?.id, context, holder)
                 check++
             } else {
                 context.toast("이미 투표하셨습니다")
             }
         }
+
         holder.dislikeButton.setOnClickListener {
             if (check == 0) {
-                send( holder, position , DISLIKE) {
-                    if(it == 0){
-                        holder.likeNumber?.setText((mData?.get(position)?.likeNumber!!.toInt() - 1).toString())
-                    } else {
-                        context.toast("이미 투표하셨습니다")
-                    }
-                }
+                ClickEvents()
+                    .sendDislike(mData?.get(position)?.id, context, holder)
                 check++
             } else {
                 context.toast("이미 투표하셨습니다")
             }
         }
 
-    }
-
-    fun send(holder : mViewH ,position: Int, which : Int,callback: ((Int) -> Unit)) {
-        var ch = 0
-        if(which == LIKE) {
-            ch = ClickEvents()
-                .sendLike(mData?.get(position)?.id, context, holder)
-        } else {
-            ch = ClickEvents()
-                .sendDislike(mData?.get(position)?.id, context, holder)
-        }
-        refreshLike()
-        callback.invoke(ch)
-    }
-
-    private fun  refreshLike() {
-        val handler = Handler()
-        handler.postDelayed(Runnable {  }, 2000)
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴.

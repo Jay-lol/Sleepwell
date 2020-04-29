@@ -84,23 +84,24 @@ class ClickEvents {
             override fun onPostExecute(result: String?) {
                 super.onPostExecute(result)
                 Log.d("submit test", result)
-                Log.d("Submit", "제출 완료")
-                startRefresh()
+                if(result == "null"){
+                    context.toast("짧은 시간내에 많은 게시글 등록은 안됩니다!")
+                }
+                else{
+                    context.toast("등록 완료!")
+                    Log.d("Submit", "제출 완료")
+                    startRefresh()
+                }
             }
         }.execute()
     } // end of submit
 
     fun StartThumnailLoading(check: Int) {
 
-        val retrofitService = RetrofitCreator.defaultRetrofit()
-        retrofitService.getTotalUser()
+        RetrofitCreator.defaultRetrofit()
+            .getTotalUser()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            /*.subscribe({ it ->
-                Log.d("content", it.toString())
-                Log.d("message", it.getAsJsonPrimitive("message").asString)
-                Log.d("status", it.getAsJsonPrimitive("status").asString)
-                Log.d("status", it.getAsJsonPrimitive("data").asString)}) // data는 array라 안됨 */
             .subscribe({
                 Log.d("content", it.toString())
                 JsonString.jsonArray = it.getAsJsonArray("data")
@@ -117,59 +118,51 @@ class ClickEvents {
             }
     }
 
-    fun sendLike(id: Int?, context: Context , holder : RecyclerImageTextAdapter.mViewH): Int { // 중복아니면 0 , 중복이면 1
+    fun sendLike(id: Int?, context: Context, holder: RecyclerImageTextAdapter.mViewH) {
 
-        var result = 0
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://www.nodap.xyz/user/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val server = retrofit.create(apiService::class.java)
-        val testcall = server.sendLikeButton(id, "${JsonString.macAddress}")
-        Log.d("send Ip  :" , "${JsonString.macAddress}")
-        testcall.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Log.d("test2", response?.body().toString())
-                //중복 처리
-                if (response.body().toString()== "null"){
-                    result = 1
-                    context.toast("이미 투표하셨습니다!!")
-                    holder.likeNumber.setText((holder.likeNumber.text.toString().toInt() - 1).toString())
+        RetrofitCreator.defaultRetrofit()
+            .sendLikeButton(id, "${JsonString.macAddress}")
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    Log.d("like", response?.body().toString())
+                    //중복 처리
+                    if (response.body().toString() == "null") {
+                        context.toast("이미 투표하셨습니다!!")
+                    } else {
+                        holder.likeNumber.setText((holder.likeNumber.text.toString().toInt() + 1).toString())
+                        context.toast("좋아요!")
+                        Log.d("Print", "좋아요")
+                    }
                 }
-                else
-                    Log.d("Print", "좋아요")
-            }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e("error", t.message.toString())
-            }
-        })
-        return result
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.e("error", t.message.toString())
+                }
+            })
     }
 
-    fun sendDislike(id: Int?, context: Context, holder : RecyclerImageTextAdapter.mViewH): Int {
+    fun sendDislike(id: Int?, context: Context, holder: RecyclerImageTextAdapter.mViewH) {
 
-        var result = 0
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://www.nodap.xyz/user/dislike/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val server = retrofit.create(apiService::class.java)
-        val testcall = server.sendLikeButton(id, "${JsonString.macAddress}")
-        testcall.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Log.d("test2", response?.body().toString())
-                //중복 처리
-                if (response?.body().toString() == "1")
-                    result = 1
-                Log.d("Print", "싫어요")
-            }
+        RetrofitCreator.defaultRetrofit()
+            .sendDisLikeButton(id, "${JsonString.macAddress}")
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    Log.d("dislike", response?.body().toString())
+                    //중복 처리
+                    if (response.body().toString() == "null") {
+                        context.toast("이미 투표하셨습니다!!")
+                    } else {
+                        holder.likeNumber.setText((holder.likeNumber.text.toString().toInt() - 1).toString())
+                        context.toast("싫어요!")
+                        Log.d("Print", "싫어요")
+                    }
+                }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e("error", t.message.toString())
-            }
-        })
-        return result
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.e("error", t.message.toString())
+                }
+            })
+
     }
 
 }

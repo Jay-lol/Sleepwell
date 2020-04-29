@@ -18,6 +18,9 @@ interface apiService {
     @PUT("/user/like")
     fun sendLikeButton(@Query("id") id : Int? , @Query("boardIp") boardIp: String?) : Call<ResponseBody>
 
+    @PUT("/user/dislike")
+    fun sendDisLikeButton(@Query("id") id : Int? , @Query("boardIp") boardIp: String?) : Call<ResponseBody>
+
     @POST("/users")
     fun test(): Call<ResponseBody?>?
 
