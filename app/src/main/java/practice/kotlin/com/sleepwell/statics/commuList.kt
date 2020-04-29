@@ -1,6 +1,6 @@
 package practice.kotlin.com.sleepwell.statics
 
-import practice.kotlin.com.sleepwell.RecyclerItem
+import practice.kotlin.com.sleepwell.recycler.RecyclerItem
 
 class commuList {
     companion object{

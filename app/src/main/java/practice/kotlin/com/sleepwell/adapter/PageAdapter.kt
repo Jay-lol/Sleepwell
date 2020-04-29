@@ -1,4 +1,4 @@
-package practice.kotlin.com.sleepwell
+package practice.kotlin.com.sleepwell.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

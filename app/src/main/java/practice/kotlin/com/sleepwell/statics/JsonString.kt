@@ -7,5 +7,7 @@ class JsonString {
     companion object{
         var jsonArray : JsonArray? = null
         var cnt = 0
+        var macAddress : String? = null
+
     }
 }

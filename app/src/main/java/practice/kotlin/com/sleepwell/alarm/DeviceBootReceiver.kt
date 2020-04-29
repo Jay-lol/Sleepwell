@@ -1,4 +1,4 @@
-package practice.kotlin.com.sleepwell.fragment
+package practice.kotlin.com.sleepwell.alarm
 
 import android.app.AlarmManager
 import android.app.PendingIntent

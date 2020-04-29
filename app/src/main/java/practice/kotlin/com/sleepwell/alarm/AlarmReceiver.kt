@@ -1,6 +1,5 @@
-package practice.kotlin.com.sleepwell.fragment
+package practice.kotlin.com.sleepwell.alarm
 
-import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,7 +10,8 @@ import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import practice.kotlin.com.sleepwell.MainActivity
+import practice.kotlin.com.sleepwell.AlarmActivity
+import practice.kotlin.com.sleepwell.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,10 +20,16 @@ class AlarmReceiver : BroadcastReceiver(){
     override fun onReceive(context: Context?, intent: Intent?) {
         val notificationManager =
             context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notificationIntent = Intent(context, MainActivity::class.java)
+        val notificationIntent = Intent(context, AlarmActivity::class.java)
 
         notificationIntent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP
                 or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+//        val notification = Uri.parse("R.raw.alarm")
+//        Ringtone r = RingtoneManager.getRingtone(context, notification);
+//        r.play()
+
+
 
         val pendingI = PendingIntent.getActivity(
             context, 0,
@@ -37,14 +43,14 @@ class AlarmReceiver : BroadcastReceiver(){
 
         //OREO API 26 이상에서는 채널 필요
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setSmallIcon(R.drawable.star_on) //mipmap 사용시 Oreo 이상에서 시스템 UI 에러남
+            builder.setSmallIcon(R.drawable.ic_stars_black_24dp) //mipmap 사용시 Oreo 이상에서 시스템 UI 에러남
             val channelName = "매일 알람 채널"
             val description = "매일 정해진 시간에 알람합니다."
             val importance = NotificationManager.IMPORTANCE_HIGH //소리와 알림메시지를 같이 보여줌
             val channel = NotificationChannel("default", channelName, importance)
             channel.description = description
             notificationManager?.createNotificationChannel(channel)
-        } else builder.setSmallIcon(R.mipmap.sym_def_app_icon) // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
+        } else builder.setSmallIcon(R.mipmap.ic_launcher_round) // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
 
 
         builder.setAutoCancel(true)
@@ -61,7 +67,6 @@ class AlarmReceiver : BroadcastReceiver(){
             // 노티피케이션 동작시킴
             notificationManager.notify(1234, builder.build())
             val nextNotifyTime: Calendar = Calendar.getInstance()
-
             // 내일 같은 시간으로 알람시간 결정
             nextNotifyTime.add(Calendar.DATE, 1)
 

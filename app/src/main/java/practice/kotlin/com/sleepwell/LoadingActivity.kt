@@ -3,8 +3,6 @@ package practice.kotlin.com.sleepwell
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
-import practice.kotlin.com.sleepwell.fragment.CommuFrag
-import practice.kotlin.com.sleepwell.fragment.CommuLoading
 import practice.kotlin.com.sleepwell.statics.JsonString
 
 

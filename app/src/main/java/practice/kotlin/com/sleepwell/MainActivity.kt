@@ -1,23 +1,33 @@
 package practice.kotlin.com.sleepwell
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.custom_tab1.view.*
-import org.jetbrains.anko.startActivity
-import practice.kotlin.com.sleepwell.fragment.AlarmFrag
-import practice.kotlin.com.sleepwell.fragment.CommuFrag
-import practice.kotlin.com.sleepwell.fragment.SleepFrag
+import org.jetbrains.anko.*
+import practice.kotlin.com.sleepwell.adapter.PageAdapter
+import practice.kotlin.com.sleepwell.alarm.AlarmFrag
+import practice.kotlin.com.sleepwell.sleepAndCommu.CommuFrag
+import practice.kotlin.com.sleepwell.sleepAndCommu.SleepFrag
+import practice.kotlin.com.sleepwell.statics.JsonString
+import java.net.NetworkInterface
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mContext: Context
-
+    private val REQUEST_ACCESS_NETWORK_STATE = 1000
+    private lateinit var macAddress : String
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -34,7 +44,8 @@ class MainActivity : AppCompatActivity() {
         val alarmFragment = AlarmFrag()
         val commuFragment = CommuFrag()
 
-        val adapter = PageAdapter(supportFragmentManager) // PageAdapter 생성후 PageAdapter에 추가!
+        val adapter =
+            PageAdapter(supportFragmentManager) // PageAdapter 생성후 PageAdapter에 추가!
         adapter.addItems(sleepFragment)
         adapter.addItems(alarmFragment)
         adapter.addItems(commuFragment)
@@ -73,5 +84,78 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        permissionCheck(cancel = {
+        }, ok = {
+            macAddress = getMACAddress("wlan0")
+        })
+    }
+
+    private fun permissionCheck(cancel: () -> Unit, ok: () -> Unit) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            //권한 거부일 경우
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_NETWORK_STATE)) {
+                // 이전에 권한 한번 거부했을 경우
+                cancel()
+            } else {
+                // 권한 요청
+                ActivityCompat.requestPermissions(
+                    this, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE),
+                    REQUEST_ACCESS_NETWORK_STATE
+                )
+            }
+        } else {
+            ok()
+        }
+    }
+
+    private fun sendMacAddress(){
+        val wifi = getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val info = wifi.connectionInfo
+        val macAddress = info.macAddress
+        Log.i("Mac: %s", macAddress )
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            REQUEST_ACCESS_NETWORK_STATE -> {
+                if((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+                    sendMacAddress()
+                } else {
+                    // 거부시
+                    toast("권한 거부 됨")
+                }
+                return
+            }
+        }
+
+    }
+    fun getMACAddress(interfaceName: String?): String {
+        try {
+            val interfaces: List<NetworkInterface> =
+                Collections.list(NetworkInterface.getNetworkInterfaces())
+            for (intf in interfaces) {
+                if (interfaceName != null) {
+                    if (!intf.getName().equals(interfaceName, ignoreCase = true)) continue
+                }
+                val mac: ByteArray = intf.getHardwareAddress() ?: return ""
+                val buf = StringBuilder()
+                for (idx in mac.indices) buf.append(String.format("%02X:", mac[idx]))
+                if (buf.length > 0) buf.deleteCharAt(buf.length - 1)
+                Log.i("Mac %s", buf.toString())
+                JsonString.macAddress = buf.toString()
+                return buf.toString()
+            }
+        } catch (ex: Exception) {
+        } // for now eat exceptions
+        return ""
     }
 }
