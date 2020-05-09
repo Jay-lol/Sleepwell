@@ -5,6 +5,7 @@ class RecyclerItem {
     var linkUri : String? = null
     var iconUri : String? = null
     var titleStr : String? = null
+    var writer : String?  = null
     var channelStr : String? = null
     var likeNumber : Int = 0
 }

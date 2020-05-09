@@ -2,9 +2,13 @@ package practice.kotlin.com.sleepwell
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,17 +31,16 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mContext: Context
     private val REQUEST_ACCESS_NETWORK_STATE = 1000
-    private lateinit var macAddress : String
+    private lateinit var macAddress: String
+    private var ovPermission = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        mContext = applicationContext
-
         startActivity<LoadingActivity>()
 
-        // 모든 버튼 클릭관리
+        mContext = applicationContext
 
         val sleepFragment = SleepFrag()
         sleepFragment.name = "첫번째 창"
@@ -51,32 +54,33 @@ class MainActivity : AppCompatActivity() {
         adapter.addItems(commuFragment)
 
         // 중요!
-        main_viewPager.setAdapter(adapter) // 뷰페이저에 adapter 장착
+        main_viewPager.adapter = adapter // 뷰페이저에 adapter 장착
         main_tablayout.setupWithViewPager(main_viewPager) // 탭레이아웃과 뷰페이저를 연동
 
-
-        main_tablayout.getTabAt(0)?.setCustomView(createView("취침시간"))
-        main_tablayout.getTabAt(1)?.setCustomView(createView("알람"))
-        main_tablayout.getTabAt(2)?.setCustomView(createView("커뮤니티"))
+        main_tablayout.getTabAt(0)?.customView = createView("취침시간")
+        main_tablayout.getTabAt(1)?.customView = createView("알람")
+        main_tablayout.getTabAt(2)?.customView = createView("커뮤니티")
 
     }
 
+    override fun onBackPressed() {
+        ClickEvents().backPress(this)
+    }
 
     private fun createView(tabName: String): View {
-        var tabView = LayoutInflater.from(mContext).inflate(R.layout.custom_tab1, null)
+        val tabView = LayoutInflater.from(mContext).inflate(R.layout.custom_tab1, null)
         // custom tab1의 tab_text의 text를 tabname으로
-        tabView.tab_text.text = tabName
         when (tabName) {
             "취침시간" -> {
-                tabView.tab_logo.setImageResource(android.R.drawable.ic_menu_day)
+                tabView.tab_logo.setImageResource(R.drawable.sleep_tab_logo)
                 return tabView
             }
             "알람" -> {
-                tabView.tab_logo.setImageResource(android.R.drawable.ic_menu_agenda)
+                tabView.tab_logo.setImageResource(R.drawable.alarm_tab_logo)
                 return tabView
             }
             "커뮤니티" -> {
-                tabView.tab_logo.setImageResource(android.R.drawable.ic_menu_call)
+                tabView.tab_logo.setImageResource(R.drawable.commu_tab_logo)
                 return tabView
             }
             else -> {
@@ -88,6 +92,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        if (ovPermission == false && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(applicationContext)) {
+            ovPermission = true
+            checkOverlayPermission()
+        }
+
         permissionCheck(cancel = {
         }, ok = {
             macAddress = getMACAddress("wlan0")
@@ -114,20 +124,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendMacAddress(){
+//    private fun showPermissionInfoDialog() {
+//        alert("현재 권한이 필요합니다", "권한이 필요한 이유") {
+//            yesButton {
+//                ActivityCompat.requestPermissions(
+//                    this@MainActivity, arrayOf(Manifest.permission.ACCESS_NETWORK_STATE),
+//                    REQUEST_ACCESS_NETWORK_STATE
+//                )
+//
+//            }
+//            noButton { }
+//        }.show()
+//    }
+
+    private fun sendMacAddress() {
         val wifi = getSystemService(Context.WIFI_SERVICE) as WifiManager
         val info = wifi.connectionInfo
         val macAddress = info.macAddress
-        Log.i("Mac: %s", macAddress )
+        Log.i("Mac: %s", macAddress)
     }
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode){
+        when (requestCode) {
             REQUEST_ACCESS_NETWORK_STATE -> {
-                if((grantResults.isNotEmpty() &&
-                            grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+                if ((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                ) {
                     sendMacAddress()
                 } else {
                     // 거부시
@@ -138,7 +162,8 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-    fun getMACAddress(interfaceName: String?): String {
+
+    private fun getMACAddress(interfaceName: String?): String {
         try {
             val interfaces: List<NetworkInterface> =
                 Collections.list(NetworkInterface.getNetworkInterfaces())
@@ -158,4 +183,26 @@ class MainActivity : AppCompatActivity() {
         } // for now eat exceptions
         return ""
     }
+
+
+    private fun checkOverlayPermission() {
+        try {
+            Log.e("checkse", "first")
+            alert("잠금화면위로 알람띄울려고", "권한이 필요한 이유") {
+                yesButton {
+                    val uri = Uri.parse("package:$packageName")
+                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri)
+                    startActivityForResult(intent, 5469)
+                    ovPermission = false
+                }
+            }.show()
+                .setCancelable(false)
+
+        } catch (e: java.lang.Exception) {
+            toast(e.toString())
+        }
+    }
+
+
 }
+

@@ -16,9 +16,11 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            android:timePickerMode="clock" app:layout_constraintStart_toStartOf="parent"
+            android:timePickerMode="spinner" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="100dp"/>
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp" app:layout_constraintBottom_toTopOf="@+id/alramButton"
+    />
     <Button
             android:text="알람 설정"
             android:layout_width="wrap_content"

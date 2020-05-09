@@ -13,13 +13,17 @@ import retrofit2.http.Query
 interface apiService {
 
     @POST("/user")
-    fun sendBoardInfo(@Query("boardIp") boardIp : String?, @Query("linkUrl") linkUrl: String?, @Query("writerTitle") writerTitle: String?, @Query("writer") writer: String?): Call<ResponseBody>
+    fun sendBoardInfo(@Query("boardIp") boardIp : String?, @Query("linkUrl") linkUrl: String?, @Query("writerTitle") writerTitle: String?, @Query("writer") writer: String?, @Query("password") password: String): Call<ResponseBody>
 
     @PUT("/user/like")
     fun sendLikeButton(@Query("id") id : Int? , @Query("boardIp") boardIp: String?) : Call<ResponseBody>
 
     @PUT("/user/dislike")
     fun sendDisLikeButton(@Query("id") id : Int? , @Query("boardIp") boardIp: String?) : Call<ResponseBody>
+
+    @POST("/reply")
+    fun sendComment(@Query("id") id : Int? , @Query("writer") writer : String, @Query("replyContent")
+    replyContent : String , @Query("boardIp") boardIp: String, @Query("password") password: String? ) : Call<ResponseBody>
 
     @POST("/users")
     fun test(): Call<ResponseBody?>?
@@ -30,5 +34,7 @@ interface apiService {
     @GET("/user")
     fun getTotalUser(): Observable<JsonObject>
 
+    @GET("/reply")
+    fun getComment(@Query("id") contentUid : Int?) : Observable<JsonObject>
 
 }

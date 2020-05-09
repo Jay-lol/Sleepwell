@@ -2,7 +2,9 @@ package practice.kotlin.com.sleepwell.recycler
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +15,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.recycler_item.view.*
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.toast
-import practice.kotlin.com.sleepwell.ClickEvents
-import practice.kotlin.com.sleepwell.R
+import practice.kotlin.com.sleepwell.*
 
 const val LIKE = 0
 const val DISLIKE = 1
@@ -24,13 +25,16 @@ class RecyclerImageTextAdapter(val context: Context, mList: MutableList<Recycler
 
     private var mData: MutableList<RecyclerItem>? = mList
 
+
     class mViewH(view: View) : RecyclerView.ViewHolder(view!!) {
         var icon = view.icon
         var title = view.title
         var channelName = view.channelName
         var likeNumber = view.likeNumber
+        var writer = view.writerName
         var likeButton = view.likeButton
         var dislikeButton = view.dislikeButton
+        var comment = view.commentsButton
     }
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
@@ -61,15 +65,30 @@ class RecyclerImageTextAdapter(val context: Context, mList: MutableList<Recycler
     override fun onBindViewHolder(holder: mViewH, position: Int) {
 
         val text: String? = mData?.get(position)?.iconUri
-        var check = 0
 
         Glide.with(context).load(text)
             .override(480, 270)
             .centerCrop()
             .into(holder.icon)
-        holder.title?.setText(mData?.get(position)?.titleStr)
-        holder.channelName?.setText(mData?.get(position)?.channelStr)
-        holder.likeNumber?.setText(mData?.get(position)?.likeNumber.toString())
+        holder.title?.text = mData?.get(position)?.titleStr
+        holder.channelName?.text = mData?.get(position)?.channelStr
+        holder.likeNumber?.text = mData?.get(position)?.likeNumber.toString()
+        holder.writer?.text = mData?.get(position)?.writer.toString()
+
+        setupButton(holder, position)
+
+    }
+
+    // getItemCount() - 전체 데이터 갯수 리턴.
+    override fun getItemCount(): Int {
+        if (mData!!.size > 50)
+            return 50
+        else
+            return mData!!.size
+    }
+
+    private fun setupButton(holder: mViewH, position: Int) {
+        var check = 0
 
         holder.itemView.setOnClickListener {
             mData?.get(position)?.linkUri?.let { it1 -> context.browse(it1) }
@@ -95,13 +114,10 @@ class RecyclerImageTextAdapter(val context: Context, mList: MutableList<Recycler
             }
         }
 
-    }
-
-    // getItemCount() - 전체 데이터 갯수 리턴.
-    override fun getItemCount(): Int {
-        if (mData!!.size > 50)
-            return 50
-        else
-            return mData!!.size
+        holder.comment.setOnClickListener {
+            var intent = Intent(it.context, CommentActivity::class.java)
+            intent.putExtra("contentUid", mData?.get(position)?.id)
+            context.startActivity(intent)
+        }
     }
 }

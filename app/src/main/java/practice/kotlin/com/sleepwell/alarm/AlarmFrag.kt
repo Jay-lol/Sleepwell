@@ -30,7 +30,7 @@ class AlarmFrag : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_alarm, container, false)
-        view.timePicker.setIs24HourView(true)
+        view.timePicker.setIs24HourView(false)
 
         // 앞서 설정한 값으로 보여주기
         // 없으면 디폴트 값은 현재시간
@@ -136,7 +136,7 @@ class AlarmFrag : Fragment() {
             }
 
             // 부팅 후 실행되는 리시버 사용가능하게 설정
-            pm.setComponentEnabledSetting(
+            pm?.setComponentEnabledSetting(
                 receiver,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP
