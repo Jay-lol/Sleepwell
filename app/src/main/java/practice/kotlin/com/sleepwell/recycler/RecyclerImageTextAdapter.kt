@@ -20,10 +20,10 @@ import practice.kotlin.com.sleepwell.*
 const val LIKE = 0
 const val DISLIKE = 1
 
-class RecyclerImageTextAdapter(val context: Context, mList: MutableList<RecyclerItem>) :
+class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerItem>) :
     RecyclerView.Adapter<RecyclerImageTextAdapter.mViewH>() {
 
-    private var mData: MutableList<RecyclerItem>? = mList
+    private var mData: ArrayList<RecyclerItem>? = mList
 
 
     class mViewH(view: View) : RecyclerView.ViewHolder(view!!) {
@@ -38,19 +38,19 @@ class RecyclerImageTextAdapter(val context: Context, mList: MutableList<Recycler
     }
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
-    class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var icon: ImageView? = null
-        var title: TextView? = null
-        var channelName: TextView? = null
-        var likeNumber: TextView? = null
-
-        init {
-            icon = itemView.findViewById(R.id.icon)
-            title = itemView.findViewById(R.id.title)
-            channelName = itemView.findViewById(R.id.channelName)
-            likeNumber = itemView.findViewById(R.id.likeNumber)
-        }
-    }
+//    class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//        var icon: ImageView? = null
+//        var title: TextView? = null
+//        var channelName: TextView? = null
+//        var likeNumber: TextView? = null
+//
+//        init {
+//            icon = itemView.findViewById(R.id.icon)
+//            title = itemView.findViewById(R.id.title)
+//            channelName = itemView.findViewById(R.id.channelName)
+//            likeNumber = itemView.findViewById(R.id.likeNumber)
+//        }
+//    }
 
     // onCreateViewHolder() - 아이템 뷰를 위한 뷰홀더 객체 생성하여 리턴.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): mViewH {

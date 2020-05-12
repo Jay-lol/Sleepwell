@@ -25,6 +25,10 @@ interface apiService {
     fun sendComment(@Query("id") id : Int? , @Query("writer") writer : String, @Query("replyContent")
     replyContent : String , @Query("boardIp") boardIp: String, @Query("password") password: String? ) : Call<ResponseBody>
 
+    @POST("/rereply")
+    fun sendReComment(@Query("rid") id : Int? , @Query("writer") writer : String, @Query("rereplyContent")
+    replyContent : String , @Query("boardIp") boardIp: String, @Query("password") password: String? ) : Call<ResponseBody>
+
     @POST("/users")
     fun test(): Call<ResponseBody?>?
 
@@ -36,5 +40,7 @@ interface apiService {
 
     @GET("/reply")
     fun getComment(@Query("id") contentUid : Int?) : Observable<JsonObject>
+
+
 
 }

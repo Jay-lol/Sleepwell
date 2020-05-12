@@ -28,6 +28,8 @@ import practice.kotlin.com.sleepwell.sleepAndCommu.CalculSleepTime
 import practice.kotlin.com.sleepwell.sleepAndCommu.CommentLoading
 import practice.kotlin.com.sleepwell.sleepAndCommu.CommuLoading
 import practice.kotlin.com.sleepwell.statics.JsonString
+import practice.kotlin.com.sleepwell.statics.JsonString.Companion.isCommentFirstLoading
+import practice.kotlin.com.sleepwell.statics.JsonString.Companion.jsonA
 import practice.kotlin.com.sleepwell.statics.JsonString.Companion.jsonCommuArray
 import practice.kotlin.com.sleepwell.statics.commuList
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.cList
@@ -188,27 +190,33 @@ class ClickEvents {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 Log.d("StartCommentLoading", it.toString())
-//                JsonString.cJsonArray = it.getAsJsonArray("data")
-                JsonString.jsonA = it.getAsJsonPrimitive("data")
-                Log.d("목화 ", JsonString.jsonA.toString())
+                jsonA = it.getAsJsonPrimitive("data")
 
-                rep = JsonString.jsonA.toString()
+                rep = jsonA.toString()
                 rep = rep.substring(rep.indexOf("\"")+1, rep.lastIndexOf("\""))
                 Log.d("목화1 ", rep)
-//                val test = "[{\"likecnt\":\"0\",\"writter\":\"익명\",\"id\":\"232\",\"replyContent\":\" test \",\"rid\":\"5\",\"firecnt\":\"0\"}," +
+//              "[{\"likecnt\":\"0\",\"writter\":\"익명\",\"id\":\"232\",\"replyContent\":\" test \",\"rid\":\"5\",\"firecnt\":\"0\"}," +
 //                        "{\"likecnt\":0,\"writter\":\"익명\",\"id\":\"232\",\"replyContent\":\" test2 \",\"rid\":\"6\",\"firecnt\":\"0\"}]"
                 rep = rep.replace("\\\"", "\"")
-//                val test2 = "[{\\\"likecnt\\\":0,\\\"writter\\\":\\\"익명\\\",\\\"id\\\":232,\\\"replyContent\\\":\\\" test \\\",\\\"rid\\\":5,\\\"firecnt\\\":0},{\\\"likecnt\\\":0,\\\"writter\\\":\\\"익명\\\",\\\"id\\\":232,\\\"replyContent\\\":\\\" test \\\",\\\"rid\\\":6,\\\"firecnt\\\":0},{\\\"likecnt\\\":0,\\\"writter\\\":\\\"익명\\\",\\\"id\\\":232,\\\"replyContent\\\":\\\" test \\\",\\\"rid\\\":7,\\\"firecnt\\\":0},{\\\"likecnt\\\":0,\\\"writter\\\":\\\"익명\\\",\\\"id\\\":232,\\\"replyContent\\\":\\\" test \\\",\\\"rid\\\":8,\\\"firecnt\\\":0}]\n"
+//              "[{\\\"likecnt\\\":0,\\\"writter\\\":\\\"익명\\\",\\\"id\\\":232,\\\"replyContent\\\":\\\" test \\\",\\\"rid\\\":5,\\\"firecnt\\\":0},{\\\"likecnt\\\":0,\\\"writter\\\":\\\"익명\\\",\\\"id\\\":232,\\\"replyContent\\\":\\\" test \\\",\\\"rid\\\":6,\\\"firecnt\\\":0},{\\\"likecnt\\\":0,\\\"writter\\\":\\\"익명\\\",\\\"id\\\":232,\\\"replyContent\\\":\\\" test \\\",\\\"rid\\\":7,\\\"firecnt\\\":0},{\\\"likecnt\\\":0,\\\"writter\\\":\\\"익명\\\",\\\"id\\\":232,\\\"replyContent\\\":\\\" test \\\",\\\"rid\\\":8,\\\"firecnt\\\":0}]\n"
 
                 jsonCommuArray = JSONArray(rep)
 
-//                Log.d("dd", jsonCommuArray!!.getJSONObject(1).get("writter").toString())
+                Log.d("dd", jsonCommuArray!!.getJSONObject(0).get("writter").toString())
 
                 if (it == null) {
                     imageView.setImageResource(R.drawable.no_comment)
                 } else {
-                    CommentLoading().refreshCommuList(recycler)
-                    imageView.setImageResource(0)
+                    if (isCommentFirstLoading) {
+                        CommentLoading().refreshCommuList(recycler)
+                        isCommentFirstLoading = !isCommentFirstLoading
+                        imageView.setImageResource(0)
+                    } else {
+                        cList.clear()
+                        CommentLoading().refreshCommuList(recycler)
+                        imageView.setImageResource(0)
+                    }
+
                 }
             })
             {
@@ -294,6 +302,41 @@ class ClickEvents {
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Log.e("sendCommentF", t.message.toString())
+                }
+            })
+
+    }
+
+    fun sendReCommentF(rootid : Int? , id: Int?, content : String ,context: Context?, recycler: RecyclerView ,imageView: ImageView ) {
+
+        var editor: String? = null
+        if (editor == null) {
+            editor = "익명"
+        } else {
+            editor = "사용자"
+        }
+
+        var password: String? = null
+        if (password == null) {
+            password = JsonString.macAddress
+        } else {
+            password = "1234"
+        }
+        RetrofitCreator.defaultRetrofit()
+            .sendReComment(id, editor, content, "${JsonString.macAddress}", password)
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    Log.d("sendReComment", response.body().toString())
+                    //중복 처리
+                    if (response.body().toString() == "null") {
+                        context?.toast("짧은 시간내에 많은 댓글 등록은 안됩니다!")
+                    } else {
+                        StartCommentLoading(rootid,imageView,recycler)
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.e("sendReCommentF", t.message.toString())
                 }
             })
 

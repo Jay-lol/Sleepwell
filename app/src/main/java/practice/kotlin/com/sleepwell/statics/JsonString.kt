@@ -9,9 +9,12 @@ class JsonString {
         var jsonArray : JsonArray? = null
         var jsonA : JsonPrimitive? = null
         var jsonCommuArray : JSONArray? = null
+        var jsonRereArray : JSONArray? = null
+        var replyArray = mutableListOf<String>()
         var cnt = 0
+        var isCommentFirstLoading : Boolean = true
         var macAddress : String? = null
 
-        var cJsonArray : JsonArray? = null
+
     }
 }
