@@ -68,6 +68,11 @@ class MainActivity : AppCompatActivity() {
         main_tablayout.getTabAt(1)?.customView = createView("알람")
         main_tablayout.getTabAt(2)?.customView = createView("커뮤니티")
 
+
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     override fun onBackPressed() {
@@ -195,7 +200,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkOverlayPermission() {
         try {
             Log.e("checkse", "first")
-            alert("잠금화면위로 알람띄울려고", "권한이 필요한 이유") {
+            alert("알람화면을 잠금화면위로 올리기 위해서 필요합니다 :)", "권한이 필요한 이유") {
                 yesButton {
                     val uri = Uri.parse("package:$packageName")
                     val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri)

@@ -32,6 +32,6 @@ class SleepFrag : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-       ClickEvents().cal(v, requireActivity(), null)
+        ClickEvents().cal(v, requireActivity(), null)
     }
 }

@@ -9,32 +9,51 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:id="@+id/cal_now"
             android:text="지금 취침"
             android:textSize="10pt"
+            app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.498" app:layout_constraintVertical_bias="0.193"/>
+            app:layout_constraintHorizontal_bias="0.498" app:layout_constraintVertical_bias="0.193"
+            app:icon="@drawable/ic_brightness_2_black_24dp"
+            app:strokeColor="#FF0000" android:paddingLeft="16dp" android:paddingTop="10dp"
+            android:paddingBottom="10dp" app:strokeWidth="1dp"
+            android:backgroundTint="@color/ic_launcher_sleep_background"/>
+
+
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:id="@+id/cal_Specific"
             android:text="이때 일어나려면"
             android:textSize="10pt"
+            app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.497" app:layout_constraintVertical_bias="0.511"/>
+            app:layout_constraintHorizontal_bias="0.497" app:layout_constraintVertical_bias="0.511"
+            app:icon="@drawable/ic_brightness_high_black_24dp"
+            app:strokeColor="#FF0000" android:paddingLeft="16dp" android:paddingTop="10dp"
+            android:paddingBottom="10dp" app:strokeWidth="1dp"
+            android:backgroundTint="@color/ic_launcher_sleep_background"/>
+
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:id="@+id/cal_future"
             android:text="이때 자면"
             android:textSize="10pt"
+            app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.498" app:layout_constraintVertical_bias="0.812"/>
+            app:layout_constraintHorizontal_bias="0.498" app:layout_constraintVertical_bias="0.812"
+            app:icon="@drawable/ic_stars_black_24dp"
+            app:strokeColor="#FF0000" android:paddingLeft="16dp" android:paddingTop="10dp"
+            android:paddingBottom="10dp" app:strokeWidth="1dp"
+            android:backgroundTint="@color/ic_launcher_sleep_background"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

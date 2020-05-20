@@ -1,14 +1,13 @@
 package practice.kotlin.com.sleepwell.alarm
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
+import android.app.AlarmManager.AlarmClockInfo
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.text.format.Time
+import android.util.Log
 import android.widget.TextView
 import practice.kotlin.com.sleepwell.AlarmActivity
 import practice.kotlin.com.sleepwell.R
@@ -16,24 +15,46 @@ import practice.kotlin.com.sleepwell.R
 
 class AlarmSetting {
 
-    fun refreshCurrentTime(paramTextView: TextView) {
+    fun refreshCurrentTime(paramTextView: TextView, apOrpm : TextView) { // 알람시작시 세팅되는
         val time = Time()
         time.setToNow()
         val stringBuilder = StringBuilder()
-        stringBuilder.append(String.format("%02d", *arrayOf<Any>(Integer.valueOf(time.hour))))
-        stringBuilder.append(":")
-        stringBuilder.append(String.format("%02d", *arrayOf<Any>(Integer.valueOf(time.minute))))
+        var hour :Int
+        val min : Int
+        Log.d("Time" , "${Integer.valueOf(time.hour)}")
+        if(Integer.valueOf(time.hour)>12){
+            apOrpm.text = "오후"
+            stringBuilder.append(String.format("%2d ", Integer.valueOf(time.hour) -12))
+            stringBuilder.append(" ")
+            stringBuilder.append(String.format(" %02d", Integer.valueOf(time.minute)))
+        }
+        else {
+            apOrpm.text = "오전"
+            hour = Integer.valueOf(time.hour)
+            if(hour < 1)
+                hour = 12
+            stringBuilder.append(String.format("%2d ", hour))
+            stringBuilder.append(" ")
+            stringBuilder.append(String.format(" %02d", Integer.valueOf(time.minute)))
+        }
+//        val time = Time()
+//        time.setToNow()
+//        val stringBuilder = StringBuilder()
+//        stringBuilder.append(String.format("%02d ", Integer.valueOf(time.hour)))
+//        stringBuilder.append(" ")
+//        stringBuilder.append(String.format(" %02d", Integer.valueOf(time.minute)))
         paramTextView.text = stringBuilder.toString()
     }
 
-    fun setupCurrentTime(paramContext: Context, paramTextView: TextView, paramFloat: Float,
+    fun setupCurrentTime(paramContext: Context, paramTextView: TextView, apOrpm : TextView, paramFloat: Float,
                          paramCurrentTimePicker: CurrentTimePicker?) {
         val intentFilter = IntentFilter("android.intent.action.TIME_TICK")
         paramTextView.setTextSize(0, paramTextView.textSize * paramFloat)
         paramContext.registerReceiver(paramCurrentTimePicker, intentFilter)
-        refreshCurrentTime(paramTextView)
+        refreshCurrentTime(paramTextView, apOrpm)
     }
 
+    // 노티랑 관련
     fun alarmNoti(paramContext : Context) : Notification? {
         var notification: Notification?  = null
         val intent = Intent(paramContext, AlarmActivity::class.java)
@@ -75,7 +96,12 @@ class AlarmSetting {
         return notification
 
     }
+
     fun cancelAlarmingNotification(paramContext: Context) {
         (paramContext.getSystemService("notification") as NotificationManager).cancel("alarming", 2147483647)
+    }
+
+    fun setAlarm(paramContext: Context, paramInt1: Int, paramInt2: Int) {
+
     }
 }

@@ -4,10 +4,7 @@ import com.google.gson.JsonObject
 import io.reactivex.Observable
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 interface apiService {
@@ -22,25 +19,41 @@ interface apiService {
     fun sendDisLikeButton(@Query("id") id : Int? , @Query("boardIp") boardIp: String?) : Call<ResponseBody>
 
     @POST("/reply")
-    fun sendComment(@Query("id") id : Int? , @Query("writer") writer : String, @Query("replyContent")
+    fun sendComment(@Query("id") id : Int , @Query("writer") writer : String, @Query("replyContent")
     replyContent : String , @Query("boardIp") boardIp: String, @Query("password") password: String? ) : Call<ResponseBody>
 
     @POST("/rereply")
-    fun sendReComment(@Query("rid") id : Int? , @Query("writer") writer : String, @Query("rereplyContent")
-    replyContent : String , @Query("boardIp") boardIp: String, @Query("password") password: String? ) : Call<ResponseBody>
-
-    @POST("/users")
-    fun test(): Call<ResponseBody?>?
-
-    @GET("/users")
-    fun getUser(@Query("name") name: String?): Observable<JsonObject>
+    fun sendReComment(@Query("id") rootid : Int, @Query("rid") id : Int?, @Query("writer") writer : String, @Query("rereplyContent")
+    replyContent : String, @Query("boardIp") boardIp: String, @Query("password") password: String? ) : Call<ResponseBody>
 
     @GET("/user")
-    fun getTotalUser(): Observable<JsonObject>
+    fun getTotalUser(@Query("page") page : Int , @Query("pageChoice") likeOrRecent : Int): Observable<JsonObject>
 
     @GET("/reply")
     fun getComment(@Query("id") contentUid : Int?) : Observable<JsonObject>
 
+    @PUT("/reply/like")
+    fun sendReplyLike( @Query("rid")rid : Int , @Query("boardIp")boardIp : String) : Call<ResponseBody>
 
+    @PUT("/rereply/like")
+    fun sendRereplyLike( @Query("rrid")rrid : Int , @Query("boardIp")boardIp : String) : Call<ResponseBody>
+
+    @DELETE("/user/delete")
+    fun deleteBoard(@Query("id") id : Int ,@Query("password") password: String) : Call<ResponseBody>
+
+    @DELETE("/reply/delete")
+    fun deleteComment(@Query("rid") rid : Int ,@Query("password") password: String) : Call<ResponseBody>
+
+    @DELETE("/rereply/delete")
+    fun deleteReComment(@Query("rrid") rid : Int ,@Query("password") password: String) : Call<ResponseBody>
+
+    @PUT("/user/fire")
+    fun fireBoard(@Query("id") id : Int , @Query("boardIp") boardIp: String) : Call<ResponseBody>
+
+    @PUT("/reply/fire")
+    fun fireComment(@Query("id") id : Int , @Query("boardIp") boardIp: String) : Call<ResponseBody>
+
+    @PUT("/rereply/fire")
+    fun fireReComment(@Query("id") id : Int , @Query("boardIp") boardIp: String) : Call<ResponseBody>
 
 }

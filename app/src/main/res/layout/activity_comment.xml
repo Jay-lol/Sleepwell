@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent">
 
@@ -11,43 +12,68 @@
                                        app:layout_constraintEnd_toEndOf="parent"
                                        app:contentInsetStart="0dp" android:id="@+id/toolbar"
                                        android:background="@color/colorMain">
-        <ImageView android:layout_height="35dp"
+        <ImageView android:layout_height="wrap_content"
                    android:src="@drawable/title_logo"
                    android:layout_width="match_parent" android:id="@+id/titlelogo" android:scaleType="fitCenter"/>
 
     </androidx.appcompat.widget.Toolbar>
+
+    <com.google.android.youtube.player.YouTubePlayerView
+            android:id="@+id/you_tube_player_view"
+            android:layout_width="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" app:layout_constraintBottom_toTopOf="@+id/comment"
-            android:id="@+id/recyclerComment" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:background="@color/colorMain"
+            android:id="@+id/recyclerComment"
+            android:background="@color/colorMain"
             android:clickable="true" android:focusable="true"
             android:focusableInTouchMode="true"
-            android:descendantFocusability="beforeDescendants"/>
+            android:descendantFocusability="beforeDescendants"
+            app:layout_constraintTop_toBottomOf="@+id/you_tube_player_view"
+            app:layout_constraintBottom_toTopOf="@+id/comment" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     <practice.kotlin.com.sleepwell.BackPressedEditText
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:inputType="text"
             android:imeOptions="actionSend"
             android:ems="10"
+            android:textColorHint="@color/textMain"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/comment" android:textAlignment="viewStart" android:hint="댓글"
-            app:layout_constraintEnd_toStartOf="@+id/sendCommentButton"/>
-    <requestFocus/>
-    <Button
+            android:id="@+id/comment" android:textAlignment="textStart" android:hint="댓글"
+            app:layout_constraintEnd_toStartOf="@+id/sendCommentButton" app:layout_constraintHorizontal_bias="0.0"
+            android:background="@drawable/alert_dialog_comment" android:layout_marginStart="4dp"
+            android:layout_marginEnd="2dp" android:textColor="#ffffff"/>
+    <requestFocus />
+
+
+
+    <com.google.android.material.button.MaterialButton
             android:text="게시"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/sendCommentButton"
+            android:layout_height="0dp" android:id="@+id/sendCommentButton"
+            app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:strokeColor="#FF0000"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@+id/recyclerComment"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="2dp"
+            app:strokeWidth="1dp"
+            android:textColor="@color/textMain" android:layout_marginEnd="4dp" android:layout_marginBottom="4dp"
+            android:insetBottom="1dp" android:insetTop="1dp" android:backgroundTint="@android:color/black"/>
+
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@+id/toolbar" app:layout_constraintStart_toStartOf="@+id/recyclerComment"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/imageView2" android:clickable="false"/>
+            app:layout_constraintStart_toStartOf="@id/you_tube_player_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/imageView2" android:clickable="false"
+            app:layout_constraintTop_toBottomOf="@+id/you_tube_player_view"
+            android:layout_marginTop="88dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

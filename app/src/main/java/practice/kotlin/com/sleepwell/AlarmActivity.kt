@@ -8,14 +8,16 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
+import android.util.Log
+import android.view.KeyEvent
 import android.view.WindowManager
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
 import android.widget.TextView
 import androidx.core.content.getSystemService
 import kotlinx.android.synthetic.main.activity_alarm.*
-import practice.kotlin.com.sleepwell.alarm.AlarmReceiver
-import practice.kotlin.com.sleepwell.alarm.AlarmService
-import practice.kotlin.com.sleepwell.alarm.AlarmSetting
-import practice.kotlin.com.sleepwell.alarm.CurrentTimePicker
+import practice.kotlin.com.sleepwell.alarm.*
 
 
 class AlarmActivity: Activity() {
@@ -40,10 +42,26 @@ class AlarmActivity: Activity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         setContentView(R.layout.activity_alarm)
 
-        currenTimePicker = CurrentTimePicker(editText)
+        currenTimePicker = CurrentTimePicker(editText, apOrpm)
+        val alarmDb = AlarmDB.getInstance(this)
+        val id = intent.getLongExtra("id",0)
+        Log.d("액티비티 아이디", id.toString())
 
-        AlarmSetting().setupCurrentTime(this, editText, 4.0F, currenTimePicker)
-        setVolumeControlStream(AudioManager.STREAM_ALARM)
+        Thread{
+            alarmDb?.alarmDao()?.updateonoff(id, false)
+        }.start()
+
+
+        val  mAnimation = AlphaAnimation(1.0F, 0.0F)
+		mAnimation.setDuration(1000)
+		mAnimation.setInterpolator(LinearInterpolator())
+		mAnimation.setRepeatCount(Animation.INFINITE)
+		mAnimation.setRepeatMode(Animation.REVERSE)
+        divide.startAnimation(mAnimation)
+
+        AlarmSetting().setupCurrentTime(this, editText, apOrpm, 3.0F, currenTimePicker)
+//        setVolumeControlStream(AudioManager.STREAM_ALARM)
+
         // service 와 activity를 종료
         stopButton.setOnClickListener{
             stopService(Intent(this as Context, AlarmService::class.java))
@@ -52,4 +70,27 @@ class AlarmActivity: Activity() {
         }
 
     }
+
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when(keyCode){
+            KeyEvent.KEYCODE_HOME -> {
+                Log.d("키코드", "홈키")
+                stopService(Intent(this as Context, AlarmService::class.java))
+                unregisterReceiver(currenTimePicker)
+                finish()
+                return true
+            }
+
+        }
+        return false
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        stopService(Intent(this as Context, AlarmService::class.java))
+        unregisterReceiver(currenTimePicker)
+        finish()
+    }
+
 }

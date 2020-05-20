@@ -17,23 +17,27 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private val mWakeLock: WakeLock? = null
 
-    private fun reenableWakeLockAndKeyguard() {
-        val wakeLock = mWakeLock
-        if (wakeLock != null && wakeLock.isHeld) mWakeLock!!.release()
-    }
+//    private fun reenableWakeLockAndKeyguard() {
+//        val wakeLock = mWakeLock
+//        if (wakeLock != null && wakeLock.isHeld) mWakeLock!!.release()
+//    }
 
-//    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onReceive(context: Context, intent: Intent){
+    //    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onReceive(context: Context, intent: Intent) {
 //        val notificationManager =
 //            context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        Log.d("kairylab", "AlarmingReceiver is called.")
+        val a = intent.getLongExtra("id", 0)
+
+        Log.d("Jay", "AlarmingReceiver is called.")
 
         val intent = Intent(context, AlarmService::class.java)
+        intent.putExtra("id", a)
+        Log.d("리시버 아이디", a.toString())
 
         if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(intent);
+            context.startForegroundService(intent)
         } else {
-            context.startService(intent);
+            context.startService(intent)
         }
 //        reenableWakeLockAndKeyguard();
 

@@ -19,7 +19,7 @@
             app:tabIndicatorColor="#B2FBF4"
             app:tabMode="fixed"
             app:tabIconTint="#B2FBF4"
-            android:clickable="true" app:layout_constraintHorizontal_bias="0.0">
+            android:clickable="true" app:layout_constraintHorizontal_bias="0.0" android:background="#282828">
 
     </com.google.android.material.tabs.TabLayout>
     <androidx.viewpager.widget.ViewPager

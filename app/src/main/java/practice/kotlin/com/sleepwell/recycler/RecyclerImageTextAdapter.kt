@@ -16,16 +16,16 @@ import kotlinx.android.synthetic.main.recycler_item.view.*
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.toast
 import practice.kotlin.com.sleepwell.*
+import practice.kotlin.com.sleepwell.adapter.GlideApp
 
-const val LIKE = 0
-const val DISLIKE = 1
 
-class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerItem>) :
-    RecyclerView.Adapter<RecyclerImageTextAdapter.mViewH>() {
+class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerItem>, listener : clickBoard) :
+    RecyclerView.Adapter<RecyclerImageTextAdapter.mViewH>(){
 
     private var mData: ArrayList<RecyclerItem>? = mList
+    val mCallback = listener
 
-
+    // 아이템 뷰를 저장하는 뷰홀더 클래스.
     class mViewH(view: View) : RecyclerView.ViewHolder(view!!) {
         var icon = view.icon
         var title = view.title
@@ -34,23 +34,9 @@ class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerIt
         var writer = view.writerName
         var likeButton = view.likeButton
         var dislikeButton = view.dislikeButton
-        var comment = view.commentsButton
+        var commentNumber = view.commentNumber
     }
 
-    // 아이템 뷰를 저장하는 뷰홀더 클래스.
-//    class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        var icon: ImageView? = null
-//        var title: TextView? = null
-//        var channelName: TextView? = null
-//        var likeNumber: TextView? = null
-//
-//        init {
-//            icon = itemView.findViewById(R.id.icon)
-//            title = itemView.findViewById(R.id.title)
-//            channelName = itemView.findViewById(R.id.channelName)
-//            likeNumber = itemView.findViewById(R.id.likeNumber)
-//        }
-//    }
 
     // onCreateViewHolder() - 아이템 뷰를 위한 뷰홀더 객체 생성하여 리턴.
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): mViewH {
@@ -63,10 +49,9 @@ class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerIt
 
     // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     override fun onBindViewHolder(holder: mViewH, position: Int) {
-
         val text: String? = mData?.get(position)?.iconUri
 
-        Glide.with(context).load(text)
+        GlideApp.with(context).load(text)
             .override(480, 270)
             .centerCrop()
             .into(holder.icon)
@@ -74,6 +59,7 @@ class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerIt
         holder.channelName?.text = mData?.get(position)?.channelStr
         holder.likeNumber?.text = mData?.get(position)?.likeNumber.toString()
         holder.writer?.text = mData?.get(position)?.writer.toString()
+        holder.commentNumber?.text = mData?.get(position)?.commentNumber.toString()
 
         setupButton(holder, position)
 
@@ -91,8 +77,19 @@ class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerIt
         var check = 0
 
         holder.itemView.setOnClickListener {
-            mData?.get(position)?.linkUri?.let { it1 -> context.browse(it1) }
+            var intent = Intent(it.context, CommentActivity::class.java)
+            intent.putExtra("contentUid", mData?.get(position)?.id)
+            intent.putExtra("videoId", mData?.get(position)?.linkUri?.substring(mData?.get(position)?.linkUri!!.lastIndexOf("/") + 1,
+                mData?.get(position)?.linkUri!!.length))
+            context.startActivity(intent)
         }
+
+        holder.itemView.setOnLongClickListener{
+            mCallback.sendBoard(mData?.get(position)?.id!!.toInt(), null)
+            true
+        }
+
+
 
         holder.likeButton.setOnClickListener {
             if (check == 0) {
@@ -114,10 +111,12 @@ class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerIt
             }
         }
 
-        holder.comment.setOnClickListener {
-            var intent = Intent(it.context, CommentActivity::class.java)
-            intent.putExtra("contentUid", mData?.get(position)?.id)
-            context.startActivity(intent)
-        }
+
     }
+
+
+    fun changeItem(new : ArrayList<RecyclerItem>){
+        mData = new
+    }
+
 }

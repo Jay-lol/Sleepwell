@@ -1,11 +1,44 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:colorBackground">#282828</item>
+        <item name="colorPrimary">#282828</item>
+        <item name="colorPrimaryDark">#282828</item>
+        <item name="android:numbersTextColor">#ffffff</item>
+        <item name="android:timePickerStyle">@style/MyTimePicker</item>
+<!--        <item name="switchStyle">@style/Widget.MaterialComponents.CompoundButton.Switch</item>-->
+    </style>
+
+    <style name="SwitchCompatStyle">
+        <item name="switchStyle">@style/Widget.MaterialComponents.CompoundButton.Switch</item>
+    </style>
+
+    <style name="Switch">
+        <item name="android:colorBackground">@color/likeColor</item>
+        <item name="colorPrimary">@color/likeColor</item>
+        <item name="colorPrimaryDark">@color/likeColor</item>
+        <item name="colorAccent">#ffffff</item>
+        <item name="android:numbersTextColor">#ffffff</item>
+<!--        <item name="strokeColor">#000000</item>-->
+<!--        <item name="strokeWidth">1dp</item>-->
+
+    </style>
+    <style name="Switch2" parent="Theme.AppCompat.Light.NoActionBar">
+        ...
+        <!-- Active thumb color & Active track color(30% transparency) -->
+        <item name="colorControlActivated">#ffffffff</item>
+        <!-- Inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#ffffffff</item>
+        <!-- Inactive track color(30% transparency) -->
+        <item name="android:colorForeground">#ffffffff</item>
+
+        <item name="strokeColor">#ff000000</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="thumbElevation">1dp</item>
+
     </style>
 
 </resources>
