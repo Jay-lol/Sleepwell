@@ -85,7 +85,7 @@ class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerIt
         }
 
         holder.itemView.setOnLongClickListener{
-            mCallback.sendBoard(mData?.get(position)?.id!!.toInt(), null)
+            mCallback.sendBoard(mData?.get(position)?.id!!.toInt(), null,holder.adapterPosition , position)
             true
         }
 

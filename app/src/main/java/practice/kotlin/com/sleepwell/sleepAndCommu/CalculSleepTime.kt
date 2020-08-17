@@ -26,7 +26,7 @@ class CalculSleepTime {
         }
 
 
-        return result + "위의 시간에 일어나는걸 추천합니다"
+        return result + "위의 시간에 일어나는걸 추천합니다\n"+"알람탭으로 이동하여 알람을 맞춰주세요"
     }
 
     fun calSleepSpecific(hour: Int, minute: Int): String {
@@ -53,7 +53,7 @@ class CalculSleepTime {
                 result = today + "\n" + result
         }
 
-        return result + "위의 시간에 자는걸 추천합니다"
+        return result + "위의 시간에 자는걸 추천합니다\n"+"알람탭으로 이동하여 알람을 맞춰주세요"
     }
 
     fun calSleepFuture(hour: Int, minute: Int): String {
@@ -80,6 +80,6 @@ class CalculSleepTime {
                 result += today + "   "
         }
 
-        return result + "위의 시간에 일어나는걸 추천합니다"
+        return result + "위의 시간에 일어나는걸 추천합니다\n"+"알람탭으로 이동하여 알람을 맞춰주세요"
     }
 }

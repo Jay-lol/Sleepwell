@@ -6,8 +6,11 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.delete_fire.*
+import kotlinx.android.synthetic.main.fragment_commu.*
 import kotlinx.android.synthetic.main.submit_dialog.*
 import org.jetbrains.anko.toast
 import practice.kotlin.com.sleepwell.ClickEvents
@@ -61,7 +64,9 @@ class CustomDialog(private val context : Activity){
 
                 Utils(context).getMetaDataFromUrl(writer, password, writerTitle ,dlg.linkSubmit.text.toString(), context
                 ,recycler)
-
+                context.progressBar3.visibility = View.VISIBLE
+                context.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 dlg.dismiss()
             }
         }
@@ -75,7 +80,7 @@ class CustomDialog(private val context : Activity){
 
 
     // 게시글 신고삭제
-    fun requestDeleteFireBoard(id: Int, recycler: RecyclerView){
+    fun requestDeleteFireBoard(id: Int, recycler: RecyclerView, position : Int, idx : Int){
         var password = macAddress.substring(0, macAddress.indexOf(":"))
         password += "1919"
 
@@ -89,14 +94,17 @@ class CustomDialog(private val context : Activity){
         dlg.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
 
+
         // 커스텀 다이얼로그의 각 위젯들을 정의한다.
         dlg.deleteButton.setOnClickListener {   // 삭제
             Log.d("ss","삭제")
 
             if(!TextUtils.isEmpty(dlg.deleteCommentPassword.text.toString()))
                 password = dlg.deleteCommentPassword.text.toString()
-
-            ClickEvents().deleteBoard(id, password,context, recycler)
+            context.progressBar3.visibility=View.VISIBLE
+            context.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            ClickEvents().deleteBoard(id, password, context, recycler, position, idx)
             dlg.dismiss()
 
         }

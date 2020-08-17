@@ -3,37 +3,96 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         tools:context=".sleepAndCommu.SleepFrag">
 
     <!-- TODO: Update blank fragment layout -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fabSub1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cornerRadius="20dp"
+            android:layout_gravity="bottom|end"
+            app:strokeColor="#ff0000"
+            android:textColor="@color/textMain"
+            app:strokeWidth="1dp"
+            app:icon="@drawable/ic_access_time_black_24dp"
+            app:layout_constraintTop_toTopOf="@id/fabMain"
+            app:layout_constraintBottom_toBottomOf="@id/fabMain"
+            app:layout_constraintStart_toStartOf="@id/fabMain"
+            app:layout_constraintEnd_toEndOf="@id/fabMain" app:backgroundTint="#BF8587fE"
+            android:textSize="18sp"/>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fabSub2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cornerRadius="20dp"
+            android:layout_gravity="bottom|end"
+            android:textColor="@color/textMain"
+            app:strokeColor="#ff0000"
+            app:icon="@drawable/ic_create_black_24dp"
+            app:strokeWidth="1dp"
+            app:layout_constraintTop_toTopOf="@id/fabMain"
+            app:layout_constraintBottom_toBottomOf="@id/fabMain"
+            app:layout_constraintStart_toStartOf="@id/fabMain"
+            app:layout_constraintEnd_toEndOf="@id/fabMain" app:backgroundTint="#BF8587fE"
+            android:textSize="18sp"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_gravity="bottom|end"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/text_commu"
+            android:theme="@style/progressbarTheme"
+            android:id="@+id/fabMain"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="영상"
             app:icon="@drawable/ic_add_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:iconTint="@color/ic_launcher_sleep_background" android:textColor="@color/ic_launcher_sleep_background"
-            android:elevation="4dp"/>
+            android:elevation="6dp" android:src="@drawable/ic_add_black_24dp"
+            app:backgroundTint="@color/likeColor"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"/>
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:layout_width="match_parent"
                                                            android:layout_height="match_parent"
                                                            android:id="@+id/swipe_layout">
-    <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="0dp"
-            android:layout_height="0dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/recyclerView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="0dp"
+                android:layout_height="0dp" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/recyclerView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="invisible"
+            android:clickable="true" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="16dp" android:id="@+id/floatingActionButton"
+            android:background="@drawable/alert_dialog_border" android:src="@drawable/ic_arrow_upward_black_24dp"/>
+    <ProgressBar
+            style="@android:style/Widget.Material.Light.ProgressBar"
+            android:theme="@style/progressbarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar2" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="8dp"/>
+    <ProgressBar
+            style="@android:style/Widget.Material.Light.ProgressBar"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar3" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

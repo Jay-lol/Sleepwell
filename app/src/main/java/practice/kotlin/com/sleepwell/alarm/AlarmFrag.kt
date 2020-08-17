@@ -3,7 +3,6 @@ package practice.kotlin.com.sleepwell.alarm
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_CANCEL_CURRENT
-import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.app.TimePickerDialog
 import android.content.ComponentName
 import android.content.Context
@@ -37,8 +36,8 @@ class AlarmFrag : Fragment(), clickBoard {
 
     private var alarmDb: AlarmDB? = null
 
-    lateinit var recyclerView : RecyclerView
-    lateinit var mAdapter : AlarmRecyclerAdapter
+    lateinit var recyclerView: RecyclerView
+    lateinit var mAdapter: AlarmRecyclerAdapter
     var alarmList = listOf<AlarmTable>()
 
     //    private var alarmList = listOf<AlarmTable>()
@@ -48,7 +47,7 @@ class AlarmFrag : Fragment(), clickBoard {
 //    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_alarm, container , false)
+        return inflater.inflate(R.layout.fragment_alarm, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -87,19 +86,21 @@ class AlarmFrag : Fragment(), clickBoard {
             Log.d("in Thread ", "In")
             alarmList = alarmDb?.alarmDao()?.getAll()!!
 //            activity?.runOnUiThread {  mAdapter.notifyDataSetChanged() }
-            mAdapter = AlarmRecyclerAdapter(requireActivity(), alarmList, this)
-            mAdapter.notifyDataSetChanged()
+            Log.d("데이터구조", alarmList.toString())
 
-            Handler(Looper.getMainLooper()).postDelayed( {
+            Handler(Looper.getMainLooper()).postDelayed({
 //
-            Log.d("Size", alarmList.size.toString() + "\n")
+                Log.d("Size", alarmList.size.toString() + "\n")
 //
+                mAdapter = AlarmRecyclerAdapter(requireActivity(), alarmList, this)
                 recyclerView.adapter = mAdapter
+
                 val mLayoutManager = LinearLayoutManager(context)
                 mLayoutManager.reverseLayout = true
                 mLayoutManager.stackFromEnd = true
                 recyclerView.layoutManager = mLayoutManager
                 recyclerView.setHasFixedSize(true)
+                mAdapter.notifyDataSetChanged()
 ////                mAdapter.notifyDataSetChanged()
 ////                activity?.runOnUiThread {  mAdapter.notifyDataSetChanged() }
 //
@@ -109,7 +110,7 @@ class AlarmFrag : Fragment(), clickBoard {
 ////                requireActivity().runOnUiThread(object : Runnable{
 ////                    override fun run() {
 //
-            },500)
+            }, 500)
         }.start()
 
 //        recycler_main_screen.apply {
@@ -172,7 +173,7 @@ class AlarmFrag : Fragment(), clickBoard {
                 TimePickerDialog(
                     context, android.R.style.Theme_DeviceDefault_Dialog_Alert,
                     TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute2 ->
-
+                        Log.d("hourOfday", hourOfDay.toString())
                         if (Build.VERSION.SDK_INT >= 23) {
                             hour_24 = hourOfDay
                             minute = minute2
@@ -181,7 +182,7 @@ class AlarmFrag : Fragment(), clickBoard {
                             minute = 0    // view.timepicker.currentMinute
                         }
 
-                        if (hour_24 > 12) {
+                        if (hour_24 >= 12) {
                             am_pm = true
                             hour = hour_24 - 12
                         } else {
@@ -207,7 +208,7 @@ class AlarmFrag : Fragment(), clickBoard {
 //                                .format(currentDateTime)
 //                        Toast.makeText(requireContext(), date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show()
 
-                        Thread{
+                        Thread {
                             val newAlarm = AlarmTable()
                             newAlarm.hour = hourOfDay.toLong()
                             newAlarm.min = minute2.toLong()
@@ -221,16 +222,16 @@ class AlarmFrag : Fragment(), clickBoard {
                             )
                             alarmDb?.alarmDao()?.insert(newAlarm)
                             alarmList = alarmDb?.alarmDao()?.getAll()!!
-                            Handler(Looper.getMainLooper()).postDelayed( {
+                            Handler(Looper.getMainLooper()).postDelayed({
                                 Log.e("추가", alarmList.size.toString())
-                                Log.e("추가 alarmList.size-1", (alarmList.size-1).toString())
+                                Log.e("추가 alarmList.size-1", (alarmList.size - 1).toString())
 //                                view.alarmRecycler.adapter =
 //                                    AlarmRecyclerAdapter(requireContext(), alarmList,this)
                                 mAdapter.change(alarmList)
-                                view.alarmRecycler.adapter?.notifyItemInserted(alarmList.size-1)
-                                view.alarmRecycler.scrollToPosition(alarmList.size-1)
+                                view.alarmRecycler.adapter?.notifyItemInserted(alarmList.size - 1)
+                                view.alarmRecycler.scrollToPosition(alarmList.size - 1)
                                 diaryNotification(alarmList)
-                            },0)
+                            }, 0)
                         }.start()
 
 
@@ -268,15 +269,15 @@ class AlarmFrag : Fragment(), clickBoard {
 //        Boolean dailyNotify = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DAILY_NOTIFICATION, true);
 //        val dailyNotify = true // 무조건 알람을 사용
 
-        val pm = requireContext().packageManager
-        val receiver = ComponentName(requireActivity(), DeviceBootReceiver::class.java)
-
+        val pm = activity!!.applicationContext.packageManager
+        val receiver = ComponentName(activity!!.applicationContext, DeviceBootReceiver::class.java)
         val alarmIntent = Intent(requireActivity(), AlarmReceiver::class.java)
         var pendingIntent: PendingIntent
-        var alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        var alarmManager = activity!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
 
-        for(i in 0 until alarmlists.size) {
+        Log.d("테이블구조", alarmlists.toString())
+        for (i in 0 until alarmlists.size) {
             var time = alarmlists[i].time
             val onOff = alarmlists[i].onOff
 
@@ -288,7 +289,7 @@ class AlarmFrag : Fragment(), clickBoard {
             if (onOff) {
                 alarmIntent.putExtra("id", alarmlists[i].id)
 
-                while (calendar.before(Calendar.getInstance())){
+                while (calendar.before(Calendar.getInstance())) {
                     calendar.add(Calendar.DATE, 1)    // date 1을더해 더해준다
                     // 추가작업 : 10일이상 (10번이상 이 와일문을돌려도) 알람시간이 그대로면 업데이트를 해주자
                 }
@@ -303,7 +304,12 @@ class AlarmFrag : Fragment(), clickBoard {
 //                Log.d("알람 재설정" , date_text)
 
                 // 사용자가  알람을 허용했다면
-                pendingIntent = PendingIntent.getBroadcast(requireContext(), alarmlists[i].id!!.toInt(), alarmIntent, FLAG_CANCEL_CURRENT)
+                pendingIntent = PendingIntent.getBroadcast(
+                    activity,
+                    alarmlists[i].id!!.toInt(),
+                    alarmIntent,
+                    FLAG_CANCEL_CURRENT
+                )
 
                 alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 Log.d("사용자가 알람을??", "허용")
@@ -311,31 +317,46 @@ class AlarmFrag : Fragment(), clickBoard {
 //                AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
 //                AlarmManager.INTERVAL_DAY, pendingIntent)
 //
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP, time, pendingIntent)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                    Log.d("Jay","마시멜로이하버전")
                     // 각버전에 맞게 호출
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Log.d("Jay","롤리팝이상")
+                        //API 21 이상 API 23미만
+                        alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP, time, pendingIntent)
+                    } else {
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent)
+                    }
                 } else {
-
+                    Log.d("Jay","마시멜로이상버전")
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP, time, pendingIntent)
                 }
 
-            } else{
+            } else {
                 Log.d("사용자가 알람을??", "허용안함")
-                pendingIntent = PendingIntent.getBroadcast(requireContext(), alarmlists[i].id!!.toInt(), alarmIntent, FLAG_CANCEL_CURRENT)
+                pendingIntent = PendingIntent.getBroadcast(
+                    activity,
+                    alarmlists[i].id!!.toInt(),
+                    alarmIntent,
+                    FLAG_CANCEL_CURRENT)
+
                 alarmManager.cancel(pendingIntent)
             }
         }
 
 
-            // 부팅 후 실행되는 리시버 사용가능하게 설정
-            pm?.setComponentEnabledSetting(
-                receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP
-            )
-        }
-        //        else { //Disable Daily Notifications
+        // 부팅 후 실행되는 리시버 사용가능하게 설정
+        pm?.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP)
+
+    }
+    //        else { //Disable Daily Notifications
 //            if (PendingIntent.getBroadcast(this, 0, alarmIntent, 0) != null && alarmManager != null) {
 //                alarmManager.cancel(pendingIntent);
 //                //Toast.makeText(this,"Notifications were disabled",Toast.LENGTH_SHORT).show();
@@ -346,26 +367,24 @@ class AlarmFrag : Fragment(), clickBoard {
 //        }
 
 
-    override fun sendBoard(idx: Int, bool :Boolean?) {
-        val sendTime : Long
-        bloop@for (i in 0 until alarmList.size){
-            if(alarmList[i].id == idx.toLong())
-            {
+    override fun sendBoard(id: Int, bool: Boolean?, position: Int, idx : Int) {
+        val sendTime: Long
+        bloop@ for (i in 0 until alarmList.size) {
+            if (alarmList[i].id == id.toLong()) {
                 sendTime = alarmList[i].time!!
                 Thread {
                     Log.d("업데이트 Thread ", "In")
 
-                    alarmDb?.alarmDao()?.updateonoff(idx.toLong(), bool!!)
+                    alarmDb?.alarmDao()?.updateonoff(id.toLong(), bool!!)
                     alarmList = alarmDb?.alarmDao()?.getAll()!!
-
+                    Log.d("데이터구조2", alarmList.toString())
                     Handler(Looper.getMainLooper()).postDelayed({
-                        if(bool!!) {
-                            Log.d("알람킴","알람킴")
+                        if (bool!!) {
+                            Log.d("알람킴", "알람킴")
                             alertAlarmTime(sendTime)
                             Log.d("alarmList.onOff값", bool.toString())
-                        }
-                        else {
-                            Log.d("알람끔","알람끔")
+                        } else {
+                            Log.d("알람끔", "알람끔")
                             deleteAlarmTime(sendTime, 0)
                             Log.d("alarmList.onOff값", bool.toString())
                         }
@@ -379,8 +398,8 @@ class AlarmFrag : Fragment(), clickBoard {
 
     }
 
-    override fun sendDeIdx(idx: Long?, position : Int) {
-        Log.d("ss","ss")
+    override fun sendDeIdx(idx: Long?, position: Int) {
+        Log.d("ss", "ss")
 
         context?.alert("삭제하시겠습니까?") {
             positiveButton("Yes") {
@@ -396,8 +415,13 @@ class AlarmFrag : Fragment(), clickBoard {
                         Log.d("삭제", alarmList.size.toString() + "\n")
                         var alarmManager = requireActivity().getSystemService(Context.ALARM_SERVICE) as AlarmManager
                         val alarmIntent = Intent(requireActivity(), AlarmReceiver::class.java)
-                        if(idx!=null){
-                            val pendingIntent = PendingIntent.getBroadcast(requireActivity(), idx.toInt(), alarmIntent, FLAG_CANCEL_CURRENT)
+                        if (idx != null) {
+                            val pendingIntent = PendingIntent.getBroadcast(
+                                requireActivity(),
+                                idx.toInt(),
+                                alarmIntent,
+                                FLAG_CANCEL_CURRENT
+                            )
                             alarmManager.cancel(pendingIntent)
                         }
                         mAdapter.change(alarmList)
@@ -407,48 +431,114 @@ class AlarmFrag : Fragment(), clickBoard {
                     }, 0)
                 }.start()
             }
-            negativeButton("no"){
+            negativeButton("no") {
 
             }
         }?.show()
     }
 
-    private fun alertAlarmTime(time : Long){
+    override fun changeData(idx: Long, position: Int) {
+        Log.d("변경스레드", "ss")
 
-        val calendar  = Calendar.getInstance()
+        var am_pm: Boolean
+        var pre_hour : Long = 12
+        var pre_min : Long = 0
+
+
+        CLoop@for(i in 0 until alarmList.size)
+        {
+            if(alarmList[i].id == idx){
+                pre_hour = alarmList[i].hour
+
+//                if(alarmList[i].ampm&&pre_hour<12)
+//                    pre_hour+=12
+                Log.d("pre_hour", alarmList.toString()+"\n"+pre_hour.toString())
+                pre_min = alarmList[i].min
+                break@CLoop
+            }
+        }
+
+        val timePickerDialog =
+            TimePickerDialog(
+                context, android.R.style.Theme_DeviceDefault_Dialog_Alert,
+                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute2 ->
+                    Log.d("변경 버튼", "누름"+ hourOfDay.toString())
+//                    hourOfDay.toLong()
+//                    minute2.toLong()
+//                    am_pm
+
+                    am_pm = hourOfDay >= 12
+
+                    val calendar = Calendar.getInstance()
+                    calendar.timeInMillis = System.currentTimeMillis()
+
+                    calendar[Calendar.HOUR_OF_DAY] = hourOfDay
+                    calendar[Calendar.MINUTE] = minute2
+                    calendar[Calendar.SECOND] = 0
+
+                    alertAlarmTime(calendar.timeInMillis)
+                    // 이미 지난 시간을 지정했다면 다음날 같은 시간으로 설정
+                    if (calendar.before(Calendar.getInstance())) {
+                        calendar.add(Calendar.DATE, 1)  // date 1을더해 더해준다
+                    }
+
+                    Thread {
+                        alarmDb?.alarmDao()?.updateonoff(idx, true)
+                        alarmDb?.alarmDao()?.updateTime(idx, calendar.timeInMillis, hourOfDay, minute2, am_pm)
+                        Log.d("변경 Thread ", "In")
+                        Log.d("테이블구조1", alarmList.toString())
+                        alarmList = alarmDb?.alarmDao()?.getAll()!!
+                        Log.d("테이블구조2", alarmList.toString())
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            Log.d("변경", alarmList.size.toString() + "\n")
+                            mAdapter.change(alarmList)
+                            mAdapter.notifyItemChanged(position)
+                            diaryNotification(alarmList)
+                        }, 0)
+                    }.start()
+
+                }, pre_hour.toInt(), pre_min.toInt(), false)
+
+        timePickerDialog.window?.setGravity(Gravity.CENTER)
+        timePickerDialog.show()
+
+    }
+
+    private fun alertAlarmTime(time: Long) {
+
+        val calendar = Calendar.getInstance()
         calendar.timeInMillis = time
 
-        while (calendar.before(Calendar.getInstance())){
+        while (calendar.before(Calendar.getInstance())) {
             calendar.add(Calendar.DATE, 1)    // date 1을더해 더해준다
             // 추가작업 : 10일이상 (10번이상 이 와일문을돌려도) 알람시간이 그대로면 업데이트를 해주자
         }
 
         val currentDateTime = calendar.time
         val date_text =
-            SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault())
+            SimpleDateFormat("MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault())
                 .format(currentDateTime)
         Toast.makeText(requireActivity(), date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_LONG).show()
     }
 
-    private fun deleteAlarmTime(time : Long, flag : Int){
+    private fun deleteAlarmTime(time: Long, flag: Int) {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = time
 
-        while (calendar.before(Calendar.getInstance())){
+        while (calendar.before(Calendar.getInstance())) {
             calendar.add(Calendar.DATE, 1)    // date 1을더해 더해준다
             // 추가작업 : 10일이상 (10번이상 이 와일문을돌려도) 알람시간이 그대로면 업데이트를 해주자
         }
 
         val currentDateTime = calendar.time
         val date_text =
-            SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault())
+            SimpleDateFormat("MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault())
                 .format(currentDateTime)
-        if(flag==0)
+        if (flag == 0)
             Toast.makeText(requireActivity(), date_text + " 알람을 껏습니다!!", Toast.LENGTH_LONG).show()
         else
             Toast.makeText(requireActivity(), date_text + " 알람을 삭제했습니다!!", Toast.LENGTH_LONG).show()
     }
-
 
 
     override fun onResume() {

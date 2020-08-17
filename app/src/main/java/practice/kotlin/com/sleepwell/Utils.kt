@@ -16,7 +16,7 @@ import java.io.IOException
 import java.util.regex.Pattern
 
 
-class Utils(context : Context) {
+class Utils(context : Activity) {
     private var mContext  = context
     private var get_Image: String = "null"
     private var get_Title: String = ""
@@ -89,7 +89,7 @@ class Utils(context : Context) {
 //                Log.d("Jsoup test", "$get_Channel")
                 if(get_Title!="" && get_Channel!="") {
                     mContext.toast("제목: $get_Title\n채널명 : $get_Channel")
-                    ClickEvents().submit(writer, password, writerTitle , url, context, recycler)
+                    ClickEvents().submit(writer, password, writerTitle , url, get_Title, get_Channel,context, recycler)
                 }
                 else
                     mContext.toast("잘못된 주소입니다!!")

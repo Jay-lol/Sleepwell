@@ -8,18 +8,28 @@
         android:background="@color/colorMain"
         android:layout_centerHorizontal="true"
         tools:context=".MainActivity">
+    <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            app:adSize="BANNER"
+            app:adUnitId="@string/banner_ad_unit_id" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent">
+    </com.google.android.gms.ads.AdView>
     <com.google.android.material.tabs.TabLayout
             android:id="@+id/main_tablayout"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:tabGravity="fill"
             app:tabIndicatorColor="#B2FBF4"
             app:tabMode="fixed"
             app:tabIconTint="#B2FBF4"
-            android:clickable="true" app:layout_constraintHorizontal_bias="0.0" android:background="#282828">
+            android:clickable="true" app:layout_constraintHorizontal_bias="0.0" android:background="#282828"
+            app:layout_constraintTop_toBottomOf="@+id/adView">
 
     </com.google.android.material.tabs.TabLayout>
     <androidx.viewpager.widget.ViewPager

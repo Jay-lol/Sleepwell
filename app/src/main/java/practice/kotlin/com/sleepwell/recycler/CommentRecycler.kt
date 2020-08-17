@@ -3,6 +3,7 @@ package practice.kotlin.com.sleepwell.recycler
 import android.content.Context
 import android.graphics.Color
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,7 @@ class CommentRecycler(val context: Context, cList: ArrayList<CommentItem>, liste
         var rereply = view.rereply
         var back = view.comment_main
         var likecnt = view.LikeCount
-        var deleteButton = view.deletButton
+//        var deleteButton = view.deletButton
     }
 
 
@@ -56,22 +57,49 @@ class CommentRecycler(val context: Context, cList: ArrayList<CommentItem>, liste
         holder.userId.text = cData[position].cWriter
         holder.replycontent.text = cData[position].replycontent
 
-        if (cData[position].isRere) {
-            holder.back.setBackgroundColor(Color.parseColor("#000000"))       // FF787878 에서 수정
-            holder.likeButton.setBackgroundResource(R.drawable.custom_ripple_effect_two)
-            holder.reply.layoutParams.width = 50
 
-            holder.rereply.visibility = View.INVISIBLE
+        if(cData[position].isBest){
+
+            if (cData[position].isRere) {
+                holder.back.setBackgroundColor(Color.parseColor("#808587fE"))       // FF787878 에서 수정
+                holder.likeButton.setBackgroundColor(Color.TRANSPARENT)
+                holder.reply.layoutParams.width = 50
+
+//                holder.deleteButton.visibility = View.GONE
+
+                holder.rereply.visibility = View.GONE
+            } else {
+                holder.back.setBackgroundColor(Color.parseColor("#808587fE"))
+                holder.likeButton.setBackgroundColor(Color.TRANSPARENT)
+                Log.d("hhhhhhhhhhhhhhhhhhhhhhh", holder.likeButton.isClickable.toString())
+                holder.reply.layoutParams.width = 0
+                holder.reply.layoutParams.height = 0
+
+//                holder.deleteButton.visibility = View.GONE
+                holder.rereply.visibility = View.GONE
+            }
             holder.reply.requestLayout()
         } else {
-            holder.back.setBackgroundColor(Color.parseColor("#282828"))
-            holder.likeButton.setBackgroundResource(R.drawable.custom_ripple_effect)
-            holder.reply.layoutParams.width = 0
-            holder.reply.layoutParams.height = 0
+            if (cData[position].isRere) {
+                holder.back.setBackgroundColor(Color.parseColor("#353535"))       // FF787878 에서 수정
+                holder.likeButton.setBackgroundResource(R.drawable.custom_ripple_effect_two)
+                holder.reply.layoutParams.width = 50
 
-            holder.rereply.visibility = View.VISIBLE
+//                holder.deleteButton.visibility = View.VISIBLE
+                holder.rereply.visibility = View.INVISIBLE
+            } else {
+                holder.back.setBackgroundColor(Color.parseColor("#282828"))
+                holder.likeButton.setBackgroundResource(R.drawable.custom_ripple_effect)
+                holder.reply.layoutParams.width = 0
+                holder.reply.layoutParams.height = 0
+
+//                holder.deleteButton.visibility = View.VISIBLE
+                holder.rereply.visibility = View.VISIBLE
+            }
             holder.reply.requestLayout()
         }
+
+
 
         setupButton(holder, position)
 
@@ -85,30 +113,52 @@ class CommentRecycler(val context: Context, cList: ArrayList<CommentItem>, liste
 
         holder.likeButton.setOnClickListener {
 
-
-            if (check == 0) {
-                // 댓글, 대댓글좋아요 작업. cData[position].isRere을 통해 댓글인지, 대댓글인지
-                if(!cData[position].isRere)
-                    ClickEvents().sendCommentLike(cData[position].rid, context, holder)
-
-                else
-                    ClickEvents().sendReCommentLike(cData[position].rrid, context, holder)
-                check++
-            } else {
-                context.toast("이미 투표하셨습니다?")
+            if (!cData[position].isBest) {
+                if (check == 0) {
+                    // 댓글, 대댓글좋아요 작업. cData[position].isRere을 통해 댓글인지, 대댓글인지
+                    if (!cData[position].isRere)
+                        ClickEvents().sendCommentLike(cData[position].rid, context, holder)
+                    else
+                        ClickEvents().sendReCommentLike(cData[position].rrid, context, holder)
+                    check++
+                } else {
+                    context.toast("이미 투표하셨습니다")
+                }
             }
-
-            mCallback.onClick("좋아요!!")
 
         }
 
-        holder.deleteButton.setOnClickListener{
-            if(!cData[position].isRere)
-                mCallback.onClick("comment", cData[position].rid)
+        holder.itemView.setOnLongClickListener {
+            if (!cData[position].isBest) {
+                if (!cData[position].isRere)
+                    mCallback.onClick("comment", cData[position].rid)
+                else
+                    mCallback.onClick("reComment", cData[position].rrid)
+            }
+            true
+        }
 
-            else
-                mCallback.onClick("reComment", cData[position].rrid)
+        holder.itemView.setOnClickListener{
+            if (cData[position].isBest) {
+                if (!cData[position].isRere) {
+                    zLoop@for(i in 3 until cData.size){
+                        if (cData[position].rid == cData[i].rid) {
+                            mCallback.onClick(i)
+                            break@zLoop
+                        }
+                    }
+                }
 
+                else{
+                    zLoop@for(i in 3 until cData.size){
+                        if (cData[position].rrid == cData[i].rrid) {
+                            mCallback.onClick(i)
+                            break@zLoop
+                        }
+                    }
+                }
+
+            }
         }
 
 

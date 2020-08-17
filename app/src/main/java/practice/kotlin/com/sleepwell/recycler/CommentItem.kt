@@ -7,5 +7,6 @@ class CommentItem{
     var likeNumber : String = "0"
     var rrid : Int = -1
     var isRere : Boolean = false
+    var isBest : Boolean = false
 
 }

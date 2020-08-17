@@ -1,6 +1,5 @@
 package practice.kotlin.com.sleepwell.alarm
 
-import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -8,7 +7,7 @@ import android.os.Build
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import android.util.Log
-import androidx.annotation.RequiresApi
+import android.widget.Toast
 
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -17,10 +16,10 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private val mWakeLock: WakeLock? = null
 
-//    private fun reenableWakeLockAndKeyguard() {
-//        val wakeLock = mWakeLock
-//        if (wakeLock != null && wakeLock.isHeld) mWakeLock!!.release()
-//    }
+    private fun reenableWakeLockAndKeyguard() {
+        val wakeLock = mWakeLock
+        if (wakeLock != null && wakeLock.isHeld) mWakeLock!!.release()
+    }
 
     //    @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
@@ -28,20 +27,44 @@ class AlarmReceiver : BroadcastReceiver() {
 //            context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val a = intent.getLongExtra("id", 0)
 
-        Log.d("Jay", "AlarmingReceiver is called.")
+        Log.d("AlarmReceiver", "AlarmingReceiver is called.")
+
+        Toast.makeText(
+            context.applicationContext,
+            "[SleepWell] " + "알람울림",
+            Toast.LENGTH_SHORT).show()
 
         val intent = Intent(context, AlarmService::class.java)
         intent.putExtra("id", a)
         Log.d("리시버 아이디", a.toString())
 
-        if (Build.VERSION.SDK_INT >= 26) {
+        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+
+        // 객체의 제어레벨 설정
+
+        // 객체의 제어레벨 설정
+        var sCpuWakeLock : WakeLock?
+        sCpuWakeLock = pm.newWakeLock(
+            PowerManager.SCREEN_BRIGHT_WAKE_LOCK or
+                    PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                    PowerManager.ON_AFTER_RELEASE, "app:alarm")
+
+        //acquire 함수를 실행하여 앱을 깨운다. cpu 를 획득한다
+
+        //acquire 함수를 실행하여 앱을 깨운다. cpu 를 획득한다
+        sCpuWakeLock.acquire(10*60*1000L /*10 minutes*/)
+
+        Log.d("AlarmReceiver", "호출중")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intent)
         } else {
             context.startService(intent)
         }
-//        reenableWakeLockAndKeyguard();
+        reenableWakeLockAndKeyguard()
 
-
+        if (sCpuWakeLock != null) {
+            sCpuWakeLock.release()
+        }
 //        context.startActivity(alarmactivity)
 //        Log.d("eoor", "receiver on")
 //        val id = Intent(context, AlarmActivity::class.java)

@@ -1,18 +1,20 @@
 package practice.kotlin.com.sleepwell.sleepAndCommu
 
 import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import practice.kotlin.com.sleepwell.recycler.RecyclerImageTextAdapter
-import practice.kotlin.com.sleepwell.statics.JsonString
+import kotlinx.android.synthetic.main.fragment_commu.view.*
 import practice.kotlin.com.sleepwell.recycler.RecyclerItem
 import practice.kotlin.com.sleepwell.statics.JsonString.Companion.jsonArray
+import practice.kotlin.com.sleepwell.statics.commuList.Companion.commuview
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.mList
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.position
-import java.util.*
 
 class CommuLoading {
 
-    fun refreshList(recycler: RecyclerView?, adapter: RecyclerImageTextAdapter?) {
+//    var tempList : ArrayList<RecyclerItem> = arrayListOf()
+
+    fun refreshList(recycler: RecyclerView?, submitFlag: Int?) {
 
         var end = jsonArray!!.length()
 
@@ -38,10 +40,16 @@ class CommuLoading {
 
 //        mList.sort()      // 좋아요순
 
+
         Log.d("사이즈체크",  position.toString() +"\n"+ mList.size.toString())
 
 //        recycler?.adapter?.notifyItemRangeInserted(position*20, mList.size-1)
+
         recycler?.adapter?.notifyDataSetChanged()
+        commuview?.progressBar2?.visibility = View.GONE
+        if(submitFlag==1) {
+            recycler?.scrollToPosition(0)
+        }
     }
 
     fun addItem(id: Int, linkUrl: String, icon: String, title: String, linkChannel: String
@@ -59,6 +67,7 @@ class CommuLoading {
         item?.likeNumber = likeNumber
         item?.commentNumber = commentNumber
 
+//        tempList.add(item!!)
         mList.add(item!!)
     }
 

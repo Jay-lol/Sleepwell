@@ -16,11 +16,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.ads.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_tab1.view.*
+import kotlinx.android.synthetic.main.fragment_commu.view.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -30,9 +33,9 @@ import practice.kotlin.com.sleepwell.alarm.AlarmFrag
 import practice.kotlin.com.sleepwell.sleepAndCommu.CommuFrag
 import practice.kotlin.com.sleepwell.sleepAndCommu.SleepFrag
 import practice.kotlin.com.sleepwell.statics.JsonString
+import practice.kotlin.com.sleepwell.statics.commuList
 import java.net.NetworkInterface
 import java.util.*
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,11 +43,24 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_ACCESS_NETWORK_STATE = 1000
     private lateinit var macAddress: String
     private var ovPermission = false
+    private var exitTime : Long = 0
+    lateinit var mAdView : AdView
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        MobileAds.initialize(this) {}
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+        mAdView.adListener = object : AdListener(){
+            override fun onAdClosed() {
+            }
+        }
+
         startActivity<LoadingActivity>()
 
         mContext = applicationContext
@@ -69,10 +85,6 @@ class MainActivity : AppCompatActivity() {
         main_tablayout.getTabAt(2)?.customView = createView("커뮤니티")
 
 
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onBackPressed() {

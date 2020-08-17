@@ -30,7 +30,7 @@ class AlarmActivity: Activity() {
     private fun disableWakeLockAndKeyguard() {
         getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         window.addFlags(4718592)    //4718592
-        mWakeLock?.acquire()
+        mWakeLock?.acquire(10*60*1000L /*10 minutes*/)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +40,7 @@ class AlarmActivity: Activity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
+
         setContentView(R.layout.activity_alarm)
 
         currenTimePicker = CurrentTimePicker(editText, apOrpm)
@@ -66,7 +67,7 @@ class AlarmActivity: Activity() {
         stopButton.setOnClickListener{
             stopService(Intent(this as Context, AlarmService::class.java))
             unregisterReceiver(currenTimePicker)
-            finish()
+            finishAffinity()
         }
 
     }

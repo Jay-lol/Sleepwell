@@ -6,4 +6,5 @@ interface onItemClick {
     fun onClick(holder: CommentRecycler.cViewH)
     fun onClick(like: String)
     fun onClick(delete : String ,rid : Int)
+    fun onClick(position : Int){}
 }

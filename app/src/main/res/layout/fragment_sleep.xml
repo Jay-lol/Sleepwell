@@ -23,7 +23,7 @@
             app:icon="@drawable/ic_brightness_2_black_24dp"
             app:strokeColor="#FF0000" android:paddingLeft="16dp" android:paddingTop="10dp"
             android:paddingBottom="10dp" app:strokeWidth="1dp"
-            android:backgroundTint="@color/ic_launcher_sleep_background"/>
+            android:backgroundTint="@color/browser_actions_text_color"/>
 
 
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             app:icon="@drawable/ic_brightness_high_black_24dp"
             app:strokeColor="#FF0000" android:paddingLeft="16dp" android:paddingTop="10dp"
             android:paddingBottom="10dp" app:strokeWidth="1dp"
-            android:backgroundTint="@color/ic_launcher_sleep_background"/>
+            android:backgroundTint="@color/browser_actions_text_color"/>
 
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:id="@+id/cal_future"
@@ -54,6 +54,6 @@
             app:icon="@drawable/ic_stars_black_24dp"
             app:strokeColor="#FF0000" android:paddingLeft="16dp" android:paddingTop="10dp"
             android:paddingBottom="10dp" app:strokeWidth="1dp"
-            android:backgroundTint="@color/ic_launcher_sleep_background"/>
+            android:backgroundTint="@color/browser_actions_text_color"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

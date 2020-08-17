@@ -11,7 +11,10 @@
         <item name="android:timePickerStyle">@style/MyTimePicker</item>
 <!--        <item name="switchStyle">@style/Widget.MaterialComponents.CompoundButton.Switch</item>-->
     </style>
-
+    <style name="progressbarTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/likeColor</item>
+    </style>
     <style name="SwitchCompatStyle">
         <item name="switchStyle">@style/Widget.MaterialComponents.CompoundButton.Switch</item>
     </style>

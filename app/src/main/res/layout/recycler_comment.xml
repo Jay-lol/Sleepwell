@@ -13,8 +13,8 @@
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
             android:background="#C8C8C8"/>
     <ImageButton
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp" android:id="@+id/commentLikeButton"
             app:layout_constraintStart_toEndOf="@+id/ifRere" android:layout_marginStart="8dp"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp" android:id="@+id/userId"
             app:layout_constraintStart_toEndOf="@+id/commentLikeButton" android:layout_marginStart="4dp"
-            android:textAlignment="viewStart" android:maxLength="15" android:textStyle="bold" android:textSize="18sp"
+            android:textAlignment="viewStart" android:maxLength="15" android:textStyle="bold" android:textSize="10sp"
             android:textColor="#FFFFFF" app:layout_constraintEnd_toStartOf="@+id/rereply"
             android:layout_marginEnd="32dp"/>
     <TextView
@@ -35,7 +35,8 @@
             android:layout_height="wrap_content" android:id="@+id/replyContent"
             app:layout_constraintStart_toEndOf="@+id/commentLikeButton" android:layout_marginStart="16dp"
             android:textColor="#FBEFEF" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/userId" android:layout_marginTop="16dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/userId" android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp" android:textSize="14sp"/>
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,8 +50,8 @@
             android:id="@+id/rereply"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/view" android:background="@drawable/ic_textsms_black_24dp"
-            android:clickable="true" app:layout_constraintEnd_toStartOf="@+id/deletButton"
-            android:layout_marginEnd="8dp"/>
+            android:clickable="true"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/LikeCount"
@@ -72,10 +73,4 @@
             app:layout_constraintTop_toBottomOf="@+id/showLike" app:layout_constraintStart_toEndOf="@+id/ifRere"
             android:layout_marginStart="8dp" app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="2dp"/>
-    <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/deletButton"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp" android:layout_marginEnd="8dp"
-            android:background="@drawable/ic_toc_black_24dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

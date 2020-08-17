@@ -26,7 +26,7 @@ class LoadingActivity : Activity() {
     }
         position = 0
         mList.clear()
-        ClickEvents().startThumnailLoading(JsonString.cnt, null, null)
+        ClickEvents().startThumnailLoading(JsonString.cnt, null, null, null)
         startLoading()
     }
 

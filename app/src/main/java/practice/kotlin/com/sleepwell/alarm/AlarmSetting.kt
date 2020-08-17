@@ -66,7 +66,7 @@ class AlarmSetting {
         if (Build.VERSION.SDK_INT >= 26) {
 
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channelName = "매일 알람 채널"
+            val channelName = "알람"
 
             val notificationChannel =
                 NotificationChannel("alarming_channel", channelName, importance)
@@ -75,26 +75,28 @@ class AlarmSetting {
             notificationChannel.lightColor = -16776961
             notificationChannel.lockscreenVisibility = 0
             notificationChannel.setShowBadge(true)
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(notificationChannel)
-                notification = Notification.Builder(
-                    paramContext,
-                    "alarming_channel"
-                ).setContentTitle("상태바 드래그시 보이는 타이틀").setSmallIcon(R.mipmap.ic_launcher_round)
-                    .setContentText("상태바 드래그시 보이는 서브타이틀").setAutoCancel(false)
-                    .setChannelId("alarming_channel").setContentIntent(pendingIntent)
-                    .setWhen(System.currentTimeMillis()).build()
-            } else {
-                paramContext
-            }
+            notificationManager.createNotificationChannel(notificationChannel)
+
+            notification = Notification.Builder(
+                paramContext,
+                "alarming_channel")
+                .setContentTitle("SleepWell")
+                .setContentText("알람이 울립니다")
+                .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
+                .setAutoCancel(false)
+                .setChannelId("alarming_channel").setContentIntent(pendingIntent)
+                .setWhen(System.currentTimeMillis()).build()
+
         } else {
             notification =
-                Notification.Builder(paramContext).setContentTitle("상태바 드래그시 보이는 타이틀")
-                    .setSmallIcon(17301550).setContentText("상태바 드래그시 보이는 서브타이틀").setAutoCancel(false)
+                Notification.Builder(paramContext)
+                    .setContentTitle("SleepWell")
+                    .setContentText("알람이 울립니다")
+                    .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
+                    .setAutoCancel(false)
                     .setContentIntent(pendingIntent).setWhen(System.currentTimeMillis()).build()
         }
         return notification
-
     }
 
     fun cancelAlarmingNotification(paramContext: Context) {
