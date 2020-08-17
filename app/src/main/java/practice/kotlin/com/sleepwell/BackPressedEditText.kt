@@ -8,7 +8,7 @@ import android.widget.EditText
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.isRere
 
 
-class BackPressedEditText(context: Context?,  attributeSet : AttributeSet?) :
+class BackPressedEditText(context: Context,  attributeSet : AttributeSet?) :
     androidx.appcompat.widget.AppCompatEditText(context, attributeSet) {
 
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent): Boolean {
