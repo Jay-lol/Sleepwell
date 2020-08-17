@@ -1,6 +1,5 @@
 *.iml
 .gradle
-.idea
 /local.properties
 /.idea/caches
 /.idea/libraries
@@ -10,13 +9,6 @@
 /.idea/assetWizardSettings.xml
 .DS_Store
 /build
-/gradle
-/goodsleep.pptx
-/gradlew
-/gradlew.bat
-/settings.gradle
-/Sleepwell.iml
-/local.properties
 /captures
 .externalNativeBuild
 .cxx
