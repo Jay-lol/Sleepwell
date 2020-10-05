@@ -53,7 +53,7 @@ Android App
 
 ---
 
-![다이어그램](assets/sleepwell_DB_Diagram.PNG)
+![다이어그램](assets/sleepwell_DB_Diagram.png)
 
 ### License
 ---
