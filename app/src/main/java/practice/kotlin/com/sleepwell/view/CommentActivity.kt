@@ -1,4 +1,4 @@
-package practice.kotlin.com.sleepwell
+package practice.kotlin.com.sleepwell.view
 
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -15,18 +15,16 @@ import android.widget.EditText
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerView
 import kotlinx.android.synthetic.main.activity_comment.*
-import org.jetbrains.anko.toast
+import practice.kotlin.com.sleepwell.ClickEvents
+import practice.kotlin.com.sleepwell.R
+import practice.kotlin.com.sleepwell.onItemClick
 import practice.kotlin.com.sleepwell.recycler.CommentRecycler
 import practice.kotlin.com.sleepwell.sleepAndCommu.CommentDialog
-import practice.kotlin.com.sleepwell.statics.JsonString
 import practice.kotlin.com.sleepwell.statics.JsonString.Companion.isCommentFirstLoading
 import practice.kotlin.com.sleepwell.statics.commuList
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.cList
@@ -34,7 +32,6 @@ import practice.kotlin.com.sleepwell.statics.commuList.Companion.commentActivity
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.commentPosition
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.commentView
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.isRere
-import java.lang.Exception
 
 
 class CommentActivity  : YouTubeBaseActivity(), onItemClick {
@@ -70,7 +67,7 @@ class CommentActivity  : YouTubeBaseActivity(), onItemClick {
         commuList.idx = contentUid
         videoId = intent.getStringExtra("videoId")
         Log.d("CommentActivity contentUid",contentUid.toString())
-        Log.d("playvid url" , videoId)
+        videoId?.let { Log.d("playvid url" , it) }
         playVideo(videoId, you_tube_player_view)
 
         if(config.orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -342,7 +339,7 @@ class CommentActivity  : YouTubeBaseActivity(), onItemClick {
                         youTubeInitializationResult: YouTubeInitializationResult
                     ) {
                         isyoutubeinit = true
-                        Log.d("youtube", "Fail")
+                        Log.d("youtube", "Fail $youTubeInitializationResult")
                     }
 
                 })

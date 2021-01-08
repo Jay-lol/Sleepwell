@@ -19,8 +19,6 @@ import androidx.recyclerview.widget.RecyclerView.SmoothScroller
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_commu.*
 import kotlinx.android.synthetic.main.fragment_commu.view.*
-import kotlinx.android.synthetic.main.fragment_commu.view.fabSub1
-import kotlinx.android.synthetic.main.fragment_commu.view.fabSub2
 import practice.kotlin.com.sleepwell.ClickEvents
 import practice.kotlin.com.sleepwell.R
 import practice.kotlin.com.sleepwell.clickBoard

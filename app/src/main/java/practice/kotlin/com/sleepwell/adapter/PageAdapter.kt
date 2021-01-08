@@ -8,7 +8,6 @@ class PageAdapter(myFm : FragmentManager) : FragmentStatePagerAdapter(myFm){
 
     private var myfragments : ArrayList<Fragment> = ArrayList()
 
-
     //해당 포지션의 fragment 반환
     override fun getItem(position: Int): Fragment = myfragments[position]
     // return myfragments[position]

@@ -1,10 +1,9 @@
-package practice.kotlin.com.sleepwell
+package practice.kotlin.com.sleepwell.view
 
 import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Rect
 import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
@@ -12,28 +11,26 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_tab1.view.*
-import kotlinx.android.synthetic.main.fragment_commu.view.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.yesButton
+import practice.kotlin.com.sleepwell.ClickEvents
+import practice.kotlin.com.sleepwell.R
 import practice.kotlin.com.sleepwell.adapter.PageAdapter
-import practice.kotlin.com.sleepwell.alarm.AlarmFrag
 import practice.kotlin.com.sleepwell.sleepAndCommu.CommuFrag
 import practice.kotlin.com.sleepwell.sleepAndCommu.SleepFrag
 import practice.kotlin.com.sleepwell.statics.JsonString
-import practice.kotlin.com.sleepwell.statics.commuList
 import java.net.NetworkInterface
 import java.util.*
 
@@ -60,13 +57,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        startActivity<LoadingActivity>()
+        startActivity<SplashActivity>()
 
         mContext = applicationContext
 
         val sleepFragment = SleepFrag()
         sleepFragment.name = "첫번째 창"
-        val alarmFragment = AlarmFrag()
+        val alarmFragment = AlarmFragment()
         val commuFragment = CommuFrag()
 
         val adapter =
@@ -82,7 +79,6 @@ class MainActivity : AppCompatActivity() {
         main_tablayout.getTabAt(0)?.customView = createView("취침시간")
         main_tablayout.getTabAt(1)?.customView = createView("알람")
         main_tablayout.getTabAt(2)?.customView = createView("커뮤니티")
-
 
     }
 

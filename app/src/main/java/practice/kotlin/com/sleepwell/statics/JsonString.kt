@@ -1,6 +1,5 @@
 package practice.kotlin.com.sleepwell.statics
 
-import com.google.gson.JsonArray
 import com.google.gson.JsonPrimitive
 import org.json.JSONArray
 
@@ -15,7 +14,5 @@ class JsonString {
         var cnt = 0
         var isCommentFirstLoading : Boolean = true
         var macAddress : String = ""
-
-
     }
 }

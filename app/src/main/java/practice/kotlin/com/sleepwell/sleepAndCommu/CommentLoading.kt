@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonArray
-import practice.kotlin.com.sleepwell.CommentActivity
 import practice.kotlin.com.sleepwell.recycler.CommentItem
 import practice.kotlin.com.sleepwell.statics.JsonString.Companion.isCommentFirstLoading
 import practice.kotlin.com.sleepwell.statics.JsonString.Companion.jsonCommuArray

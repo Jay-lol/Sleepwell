@@ -29,7 +29,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import practice.kotlin.com.sleepwell.recycler.CommentRecycler
 import practice.kotlin.com.sleepwell.recycler.RecyclerImageTextAdapter
-import practice.kotlin.com.sleepwell.retrofit.RetrofitCreator
 import practice.kotlin.com.sleepwell.sleepAndCommu.CalculSleepTime
 import practice.kotlin.com.sleepwell.sleepAndCommu.CommentLoading
 import practice.kotlin.com.sleepwell.sleepAndCommu.CommuLoading
@@ -60,7 +59,6 @@ class ClickEvents {
     fun backPress(context: Activity) {
 
         val dlg = Dialog(context)
-
 
         // 커스텀 다이얼로그의 레이아웃을 설정한다.
         dlg.setContentView(R.layout.close_app)
@@ -136,12 +134,11 @@ class ClickEvents {
     @SuppressLint("StaticFieldLeak")
     fun submit(writer : String, password: String, writerTitle : String,  linkUrl : String, linkTitle : String, linkChannel : String, context: Activity, recycler: RecyclerView) {
 
-
         object : AsyncTask<Void, Void, String>() {
 
             override fun doInBackground(vararg params: Void?): String? {
 
-                val result = RetrofitCreator.defaultRetrofit()
+                val result = RetrofitCreator.retrofit
                     .sendBoardInfo(macAddress, linkUrl, linkChannel, linkTitle, writerTitle, writer, password)
                 Log.d("무슨값", macAddress +"\n"+ linkUrl +"\n"+ writerTitle +"\n"+ writer +"\n"+ password)
                 try {
@@ -154,7 +151,9 @@ class ClickEvents {
 
             override fun onPostExecute(result: String?) {
                 super.onPostExecute(result)
-                Log.d("submit test", result)
+                if (result != null) {
+                    Log.d("submit test", result)
+                }
                 if (result == "null") {
                     context.progressBar3.visibility=View.GONE
                     context.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -187,7 +186,7 @@ class ClickEvents {
         }
 
         Log.d("보내는 포지션값", position.toString())
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .getTotalUser(position, likeOrRecentOrHot)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -236,7 +235,7 @@ class ClickEvents {
 //                position -= 1
 //                CommuLoading().refreshList(recycler, null)
                 //서버에러
-                Log.e("StartThumnailLoading", it.message)
+                it.message?.let { it1 -> Log.e("StartThumnailLoading", it1) }
             }
     }
 
@@ -247,7 +246,7 @@ class ClickEvents {
         commentRecyclerProgress: ProgressBar?, cnt : Int) {
 
         Log.d("commentPosition", commentPosition.toString())
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .getComment(uid, commentPosition)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -260,7 +259,7 @@ class ClickEvents {
                     imageView.setImageResource(0)
 
                     if (commentPosition == 0) {
-                        RetrofitCreator.defaultRetrofit()
+                        RetrofitCreator.retrofit
                             .getBest(uid)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -345,13 +344,13 @@ class ClickEvents {
 //                jsonCommuArray = JSONArray()
 //                CommentLoading().refreshCommentList(recycler)
                 // 서버 에러
-                Log.e("CommentLoading", it.message)
+                it.message?.let { it1 -> Log.e("CommentLoading", it1) }
             }
     }
 
     fun sendLike(id: Int?, context: Context, holder: RecyclerImageTextAdapter.mViewH) {
 
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .sendLikeButton(id, macAddress)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -374,7 +373,7 @@ class ClickEvents {
 
     fun sendDislike(id: Int?, context: Context, holder: RecyclerImageTextAdapter.mViewH) {
 
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .sendDisLikeButton(id, macAddress)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -399,7 +398,7 @@ class ClickEvents {
     fun sendCommentF(id: Int, writer : String, password: String, content: String, context: Context?, recycler: RecyclerView, imageView: ImageView) {
         Log.d("sendcomment", "$id")
 
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .sendComment( id ,  writer, content, macAddress, password)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -440,7 +439,7 @@ class ClickEvents {
         recycler: RecyclerView,
         imageView: ImageView) {
 
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .sendReComment(rootid, id, writer, content, macAddress, password)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -477,7 +476,7 @@ class ClickEvents {
 
     fun sendCommentLike(id: Int, context: Context, holder: CommentRecycler.cViewH) {
 
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .sendReplyLike(id, "$macAddress")
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -504,7 +503,7 @@ class ClickEvents {
 
     fun sendReCommentLike(id: Int, context: Context, holder: CommentRecycler.cViewH) {
 
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .sendRereplyLike(id, "$macAddress")
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -531,7 +530,7 @@ class ClickEvents {
 
     fun deleteComment(contentUid : Int, rid : Int, password : String, context: Context, recycler: RecyclerView, imageView: ImageView){
         Log.d("DELETE", password)
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .deleteComment(rid, password)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -556,7 +555,7 @@ class ClickEvents {
 
     fun deleteReComment(contentUid : Int, rrid : Int, password : String, context: Context, recycler: RecyclerView, imageView: ImageView){
         Log.d("Re DELETE", password)
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .deleteReComment(rrid, password)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -579,7 +578,7 @@ class ClickEvents {
 
     fun fireBoard(rid : Int, context: Context){
         Log.d("FrieBoard", "Fire")
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .fireBoard(rid, macAddress)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -602,7 +601,7 @@ class ClickEvents {
 
     fun fireComment(rid : Int, context: Context){
         Log.d("Fire", "Fire")
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .fireComment(rid, macAddress)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -625,7 +624,7 @@ class ClickEvents {
 
     fun fireReComment(rid : Int, context: Context){
         Log.d("Fire Re", "Fire")
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .fireReComment(rid, macAddress)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -648,7 +647,7 @@ class ClickEvents {
 
     fun deleteBoard(id : Int, password : String, context: Activity, recycler: RecyclerView, position : Int, idx : Int){
         Log.d("DELETE", macAddress)
-        RetrofitCreator.defaultRetrofit()
+        RetrofitCreator.retrofit
             .deleteBoard(id, password)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

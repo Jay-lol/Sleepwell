@@ -3,20 +3,17 @@ package practice.kotlin.com.sleepwell.recycler
 
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.recycler_item.view.*
-import org.jetbrains.anko.browse
 import org.jetbrains.anko.toast
-import practice.kotlin.com.sleepwell.*
+import practice.kotlin.com.sleepwell.ClickEvents
+import practice.kotlin.com.sleepwell.R
 import practice.kotlin.com.sleepwell.adapter.GlideApp
+import practice.kotlin.com.sleepwell.clickBoard
+import practice.kotlin.com.sleepwell.view.CommentActivity
 
 
 class RecyclerImageTextAdapter(val context: Context, mList: ArrayList<RecyclerItem>, listener : clickBoard) :

@@ -1,9 +1,8 @@
-package practice.kotlin.com.sleepwell.alarm
+package practice.kotlin.com.sleepwell.alarm.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
 
 @Entity(tableName = "alarmTable")
 data class AlarmTable(

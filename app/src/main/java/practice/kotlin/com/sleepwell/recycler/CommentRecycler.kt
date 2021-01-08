@@ -2,7 +2,6 @@ package practice.kotlin.com.sleepwell.recycler
 
 import android.content.Context
 import android.graphics.Color
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,6 @@ import org.jetbrains.anko.toast
 import practice.kotlin.com.sleepwell.ClickEvents
 import practice.kotlin.com.sleepwell.R
 import practice.kotlin.com.sleepwell.onItemClick
-import practice.kotlin.com.sleepwell.sleepAndCommu.CustomDialog
 
 
 class CommentRecycler(val context: Context, cList: ArrayList<CommentItem>, listener: onItemClick) :

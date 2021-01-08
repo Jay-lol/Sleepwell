@@ -8,69 +8,52 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.IBinder
 import android.util.Log
-import practice.kotlin.com.sleepwell.AlarmActivity
+import practice.kotlin.com.sleepwell.view.AlarmActivity
 import java.io.IOException
 
-
+/**
+ * 1. 알람음 재생
+ * 2. 액티비티를 깨운다
+ */
 class AlarmService : Service() {
+
+    private val TAG: String = "로그"
 
     private val vibration = 1
     private lateinit var mPlayer : MediaPlayer
     private var soundVolume = 10
-
+    private val alarmSetting : AlarmSetting = AlarmSetting()
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-
-        var bool : Boolean? = null
-        var stringBuilder : StringBuilder? = null
-        val id = intent.getLongExtra("id", 0)
-
-        if (intent == null) {
-            bool = true
-        } else {
-            bool = false
-        }
-        stringBuilder?.append(bool)
-
-
-        Log.d("Jay", stringBuilder.toString());
-
+        Log.d(TAG, "AlarmService ~ onStartCommand() called")
         super.onStartCommand(intent, flags, startId)
 
-        if(intent == null){
-//            AlarmSetting().cancelAlarmingNotification(this as Context)
-            stopSelf()
-            return START_NOT_STICKY
-        }
+        val id = intent.getLongExtra("id", 0)
 
-        startForeground(1, AlarmSetting().alarmNoti(this as Context) )
+        // 노티로 알람을 준다음 백그라운드 서비스 실행
+        startForeground(1, alarmSetting.createAlarmingNotification(this))
 
-        val tntent = Intent(this as Context, AlarmActivity::class.java)
-        tntent.putExtra("id",id)
-        Log.d("서비스 아이디", id.toString())
-        tntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // 268435456
+        val alarmIntent = Intent(this, AlarmActivity::class.java)
+        alarmIntent.putExtra("id", id)
+        Log.d(TAG, "서비스ID : $id")
 
-        startActivity(tntent)
-        initializePlayer(1)
+        // 액티비티 실행하기 위한 플래그
+        // 새로운 Task를 생성하여 그 Task 안에 Activity를 추가하여 준다
+        alarmIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
+        startActivity(alarmIntent)
+        initializePlayer()
 
-        return START_STICKY     // 종료시 null
-
+        return START_STICKY
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        AlarmSetting().cancelAlarmingNotification(this as Context)
-        finalizePlayer()
-    }
+    private fun initializePlayer() {
 
-    private fun initializePlayer(p0: Int) {
-
-        var paramInt = (getSystemService(Context.AUDIO_SERVICE) as AudioManager).ringerMode
+        val paramInt = (getSystemService(Context.AUDIO_SERVICE) as AudioManager).ringerMode
 
         if (this.vibration == 1 || (paramInt != 0 && paramInt != 1)) {
             var uri: Uri? = null
@@ -78,13 +61,13 @@ class AlarmService : Service() {
             this.mPlayer = MediaPlayer()
             try {
                 if (uri != null) {
-                    this.mPlayer.setDataSource(this as Context, uri)
+                    this.mPlayer.setDataSource(this, uri)
                 }
                 this.mPlayer.setAudioStreamType(4)
                 this.mPlayer.isLooping = true
                 this.mPlayer.prepare()
 
-                val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                val audioManager : AudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
                 audioManager.setStreamVolume(
                     AudioManager.STREAM_ALARM,
                     ((this.soundVolume / 100.0f * audioManager.getStreamMaxVolume(4)).toInt()),
@@ -100,10 +83,10 @@ class AlarmService : Service() {
         }
     }
 
-    private fun finalizePlayer() {
-        if (mPlayer != null) {
-            mPlayer.pause()
-            mPlayer.stop()
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        alarmSetting.cancelAlarmingNotification(this)
+        mPlayer.pause()
+        mPlayer.stop()
     }
 }

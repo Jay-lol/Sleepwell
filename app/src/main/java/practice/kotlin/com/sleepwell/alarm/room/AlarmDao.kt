@@ -1,9 +1,9 @@
-package practice.kotlin.com.sleepwell.alarm
+package practice.kotlin.com.sleepwell.alarm.room
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.Query
 import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.Query
 
 @Dao
 interface AlarmDao {
@@ -21,7 +21,7 @@ interface AlarmDao {
     fun deleteAlarm(alarmId : Long)
 
     @Query("UPDATE alarmTable SET OnOff = :onoff WHERE id = :alarmId")
-    fun updateonoff(alarmId : Long, onoff : Boolean)
+    fun updateOnOff(alarmId : Long, onoff : Boolean)
 
     @Query("SELECT Time from alarmTable WHERE id = :idx")
     fun getById(idx : Long) : Long?

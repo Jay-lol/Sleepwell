@@ -1,8 +1,7 @@
 package practice.kotlin.com.sleepwell.statics
 
 import android.view.View
-import practice.kotlin.com.sleepwell.alarm.AlarmItem
-import practice.kotlin.com.sleepwell.alarm.AlarmTable
+import practice.kotlin.com.sleepwell.alarm.room.AlarmItem
 import practice.kotlin.com.sleepwell.recycler.CommentItem
 import practice.kotlin.com.sleepwell.recycler.RecyclerItem
 

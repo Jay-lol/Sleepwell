@@ -1,69 +1,51 @@
 package practice.kotlin.com.sleepwell.alarm
 
-import android.app.*
-import android.app.AlarmManager.AlarmClockInfo
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.text.format.Time
-import android.util.Log
 import android.widget.TextView
-import practice.kotlin.com.sleepwell.AlarmActivity
 import practice.kotlin.com.sleepwell.R
+import practice.kotlin.com.sleepwell.view.AlarmActivity
 
 
 class AlarmSetting {
 
-    fun refreshCurrentTime(paramTextView: TextView, apOrpm : TextView) { // 알람시작시 세팅되는
-        val time = Time()
-        time.setToNow()
-        val stringBuilder = StringBuilder()
-        var hour :Int
-        val min : Int
-        Log.d("Time" , "${Integer.valueOf(time.hour)}")
-        if(Integer.valueOf(time.hour)>12){
-            apOrpm.text = "오후"
-            stringBuilder.append(String.format("%2d ", Integer.valueOf(time.hour) -12))
-            stringBuilder.append(" ")
-            stringBuilder.append(String.format(" %02d", Integer.valueOf(time.minute)))
-        }
-        else {
-            apOrpm.text = "오전"
-            hour = Integer.valueOf(time.hour)
-            if(hour < 1)
-                hour = 12
-            stringBuilder.append(String.format("%2d ", hour))
-            stringBuilder.append(" ")
-            stringBuilder.append(String.format(" %02d", Integer.valueOf(time.minute)))
-        }
-//        val time = Time()
-//        time.setToNow()
-//        val stringBuilder = StringBuilder()
-//        stringBuilder.append(String.format("%02d ", Integer.valueOf(time.hour)))
-//        stringBuilder.append(" ")
-//        stringBuilder.append(String.format(" %02d", Integer.valueOf(time.minute)))
-        paramTextView.text = stringBuilder.toString()
-    }
+    private val TAG: String = "로그"
 
-    fun setupCurrentTime(paramContext: Context, paramTextView: TextView, apOrpm : TextView, paramFloat: Float,
-                         paramCurrentTimePicker: CurrentTimePicker?) {
+    /**
+     * 알람 시작시 세팅해주는 함수
+     */
+    fun setupCurrentTime(
+        paramContext: Context, paramTextView: TextView, apOrpm: TextView, paramFloat: Float,
+        paramCurrentTimePicker: CurrentTimePicker
+    ) {
+
+        // AlarmActivity의 시간텍스트를 바꿔주는 리시버 등록.
+        // CurrentTimePicker리시버에게 매분 마다 체크할 수 있게 해줌
         val intentFilter = IntentFilter("android.intent.action.TIME_TICK")
         paramTextView.setTextSize(0, paramTextView.textSize * paramFloat)
         paramContext.registerReceiver(paramCurrentTimePicker, intentFilter)
-        refreshCurrentTime(paramTextView, apOrpm)
+        paramCurrentTimePicker.refreshCurrentTime(paramTextView, apOrpm)
     }
 
-    // 노티랑 관련
-    fun alarmNoti(paramContext : Context) : Notification? {
-        var notification: Notification?  = null
-        val intent = Intent(paramContext, AlarmActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK //268435456
-        val pendingIntent = PendingIntent.getActivity(paramContext, 0, intent, 0)
+    /**
+     * 알람 노티 설정
+     */
+    fun createAlarmingNotification(paramContext: Context): Notification {
+        val notification: Notification
+        val moveAlarmActivityIntent = Intent(paramContext, AlarmActivity::class.java)
+        moveAlarmActivityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        val pendingIntent = PendingIntent.getActivity(paramContext, 0, moveAlarmActivityIntent, 0)
+
         val notificationManager =
             paramContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 26) {  // 채널ID추가
 
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channelName = "알람"
@@ -84,7 +66,8 @@ class AlarmSetting {
                 .setContentText("알람이 울립니다")
                 .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
                 .setAutoCancel(false)
-                .setChannelId("alarming_channel").setContentIntent(pendingIntent)
+                .setChannelId("alarming_channel")
+                .setContentIntent(pendingIntent)   // 클릭시 알람액티비티로 이동
                 .setWhen(System.currentTimeMillis()).build()
 
         } else {
@@ -94,16 +77,17 @@ class AlarmSetting {
                     .setContentText("알람이 울립니다")
                     .setSmallIcon(R.drawable.ic_notifications_active_black_24dp)
                     .setAutoCancel(false)
-                    .setContentIntent(pendingIntent).setWhen(System.currentTimeMillis()).build()
+                    .setContentIntent(pendingIntent)    // 클릭시 알람액티비티로 이동
+                    .setWhen(System.currentTimeMillis()).build()
         }
         return notification
     }
 
-    fun cancelAlarmingNotification(paramContext: Context) {
-        (paramContext.getSystemService("notification") as NotificationManager).cancel("alarming", 2147483647)
-    }
+    /**
+     * 알람 노티 취소
+     */
+    fun cancelAlarmingNotification(context: Context) =
+        (context.getSystemService("notification") as NotificationManager)
+            .cancel("alarming", 2147483647)
 
-    fun setAlarm(paramContext: Context, paramInt1: Int, paramInt2: Int) {
-
-    }
 }

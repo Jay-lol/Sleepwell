@@ -1,4 +1,4 @@
-package practice.kotlin.com.sleepwell
+package practice.kotlin.com.sleepwell.view
 
 import android.app.Activity
 import android.graphics.Color
@@ -7,12 +7,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.view.WindowManager
+import practice.kotlin.com.sleepwell.ClickEvents
+import practice.kotlin.com.sleepwell.R
 import practice.kotlin.com.sleepwell.statics.JsonString
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.mList
 import practice.kotlin.com.sleepwell.statics.commuList.Companion.position
 
 
-class LoadingActivity : Activity() {
+class SplashActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)

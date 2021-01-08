@@ -1,4 +1,4 @@
-package practice.kotlin.com.sleepwell.alarm
+package practice.kotlin.com.sleepwell.alarm.room
 
 import android.content.Context
 import androidx.room.Database
@@ -9,6 +9,7 @@ import androidx.room.RoomDatabase
 abstract class AlarmDB : RoomDatabase() {
     abstract fun alarmDao(): AlarmDao
 
+    // 싱글턴으로 관리, 멀티스레드 오류 방지.
     companion object {
         private var INSTANCE: AlarmDB? = null
 
